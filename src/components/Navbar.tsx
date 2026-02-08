@@ -41,8 +41,8 @@ export default function Navbar() {
             initial={{ y: -100 }}
             animate={{ y: 0 }}
             transition={{ duration: 0.5 }}
-            className={`fixed top-4 left-4 right-4 z-50 rounded-2xl transition-all duration-300 ${isScrolled
-                ? "glass shadow-lg shadow-cyan-500/10"
+            className={`fixed top-4 left-4 right-4 z-50 rounded-2xl transition-all duration-300 ${isScrolled || isMobileMenuOpen
+                ? "bg-slate-900/95 backdrop-blur-xl shadow-lg shadow-cyan-500/10 border border-slate-800"
                 : "bg-transparent"
                 }`}
         >
