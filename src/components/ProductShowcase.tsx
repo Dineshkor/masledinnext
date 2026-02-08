@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Monitor, Sun, Layers, Spline, TouchpadIcon, Eye, Tv } from "lucide-react";
+import Link from "next/link";
+import { Monitor, Sun, Layers, Spline, TouchpadIcon, Eye, Tv, ArrowRight } from "lucide-react";
 
 interface Product {
     id: string;
@@ -11,64 +12,72 @@ interface Product {
     description: string;
     icon: React.ReactNode;
     features: string[];
+    link: string;
 }
 
 const products: Product[] = [
     {
-        id: "boardview",
-        title: "Clarity BoardView",
-        subtitle: "Commercial GOB LED",
-        description: "Premium indoor commercial displays with GOB (Glue-On-Board) technology for enhanced durability and visual clarity.",
+        id: "infinity",
+        title: "MAS-Infinity Series",
+        subtitle: "Premium Fine Pitch Indoor LED",
+        description: "Ultra-fine pixel pitch LED displays delivering exceptional image quality for control rooms and boardrooms.",
         icon: <Monitor className="w-8 h-8" />,
-        features: ["Indoor/Commercial", "High Durability", "Crystal Clear"],
+        features: ["Indoor/Commercial", "P0.9 - P1.5", "Crystal Clear"],
+        link: "/products/indoor/infinity",
     },
     {
-        id: "wall",
-        title: "ClarityWall",
-        subtitle: "DOOH & Outdoor Billboards",
-        description: "High-brightness outdoor LED solutions designed for digital out-of-home advertising with superior visibility.",
+        id: "ox",
+        title: "MAS-OX Series",
+        subtitle: "High Brightness Outdoor LED",
+        description: "High-brightness outdoor LED displays designed for maximum visibility in direct sunlight.",
         icon: <Tv className="w-8 h-8" />,
-        features: ["High Brightness", "Weather Resistant", "24/7 Operation"],
+        features: ["8000+ nits", "IP65 Rated", "24/7 Operation"],
+        link: "/products/outdoor/ox",
     },
     {
-        id: "air",
-        title: "Clarity Air",
-        subtitle: "Transparent LED Series",
-        description: "Revolutionary transparent LED technology for stunning architectural installations and retail displays.",
+        id: "transglow",
+        title: "MAS-TransGlow Series",
+        subtitle: "Transparent LED Display",
+        description: "See-through LED panels that blend digital content with physical environments.",
         icon: <Layers className="w-8 h-8" />,
-        features: ["Architectural", "Lightweight", "See-Through"],
+        features: ["85% Transparent", "Lightweight", "Glass Facades"],
+        link: "/products/transparent/transglow",
     },
     {
-        id: "flex",
-        title: "Clarity Flex",
-        subtitle: "Flexible/Curved LED",
-        description: "Bendable LED modules for creative curved installations, cylinders, and unique architectural shapes.",
+        id: "bendex",
+        title: "MAS-Bendex Series",
+        subtitle: "Flexible Curved Indoor LED",
+        description: "Flexible LED modules enabling creative curved and irregular shaped displays.",
         icon: <Spline className="w-8 h-8" />,
-        features: ["Creative Installations", "Curved Designs", "Modular"],
+        features: ["Curved Designs", "≥500mm Bend", "Modular"],
+        link: "/products/indoor/bendex",
     },
     {
-        id: "touch",
-        title: "Clarity Touch",
-        subtitle: "Interactive All-in-One",
-        description: "Interactive LED displays perfect for education, corporate presentations, and collaborative environments.",
+        id: "rx-indoor",
+        title: "MAS-RX Series Indoor",
+        subtitle: "Quick-Setup Rental LED",
+        description: "Fast-deploying indoor rental LED displays designed for events and concerts.",
         icon: <TouchpadIcon className="w-8 h-8" />,
-        features: ["Education", "Corporate", "Multi-Touch"],
+        features: ["Events", "Quick Setup", "Lightweight"],
+        link: "/products/rental/rx-indoor",
     },
     {
-        id: "vision-pro",
-        title: "Clarity Vision Pro",
-        subtitle: "Professional SMD Outdoor",
-        description: "Cinema-grade outdoor LED with exceptional color accuracy and professional-level performance.",
+        id: "storm",
+        title: "MAS-Storm Series",
+        subtitle: "Rugged All-Weather Outdoor LED",
+        description: "Heavy-duty outdoor LED displays engineered for extreme weather conditions.",
         icon: <Eye className="w-8 h-8" />,
-        features: ["Cinematic", "Color Accurate", "Professional"],
+        features: ["IP68 Rated", "120 km/h Wind", "All-Weather"],
+        link: "/products/outdoor/storm",
     },
     {
-        id: "optiview",
-        title: "Clarity OptiView",
-        subtitle: "Economical Outdoor Solution",
-        description: "Cost-effective outdoor LED solution without compromising on quality and reliability.",
+        id: "standpro",
+        title: "MAS-StandPro Series",
+        subtitle: "Freestanding LED Poster",
+        description: "Elegant freestanding LED poster displays for retail and exhibitions.",
         icon: <Sun className="w-8 h-8" />,
-        features: ["Budget-Friendly", "Reliable", "Outdoor Ready"],
+        features: ["Plug & Play", "Portable", "Cloud Managed"],
+        link: "/products/standee/standpro",
     },
 ];
 
@@ -90,7 +99,7 @@ export default function ProductShowcase() {
                         Our Products
                     </span>
                     <h2 className="text-3xl md:text-5xl font-bold text-white mt-3 mb-4">
-                        The Clarity Series
+                        The MAS LED Series
                     </h2>
                     <p className="text-slate-400 max-w-2xl mx-auto">
                         Engineered for excellence, designed for impact. Explore our premium range of LED display solutions.
@@ -114,53 +123,75 @@ export default function ProductShowcase() {
                 transition-all duration-300
               `}
                         >
-                            {/* Icon */}
-                            <div className={`
+                            <Link href={product.link}>
+                                {/* Icon */}
+                                <div className={`
                 w-14 h-14 rounded-xl flex items-center justify-center mb-4
                 transition-all duration-300
                 ${hoveredId === product.id
-                                    ? "bg-gradient-to-br from-cyan-500 to-cyan-400 text-slate-950"
-                                    : "bg-slate-800 text-cyan-400"}
-              `}>
-                                {product.icon}
-                            </div>
-
-                            {/* Title & Subtitle */}
-                            <h3 className="text-xl font-bold text-white mb-1">{product.title}</h3>
-                            <p className="text-cyan-400 text-sm font-medium mb-3">{product.subtitle}</p>
-
-                            {/* Description - Revealed on hover */}
-                            <motion.div
-                                initial={false}
-                                animate={{
-                                    height: hoveredId === product.id ? "auto" : 0,
-                                    opacity: hoveredId === product.id ? 1 : 0,
-                                }}
-                                transition={{ duration: 0.3 }}
-                                className="overflow-hidden"
-                            >
-                                <p className="text-slate-400 text-sm mb-4">{product.description}</p>
-
-                                {/* Features */}
-                                <div className="flex flex-wrap gap-2">
-                                    {product.features.map((feature) => (
-                                        <span
-                                            key={feature}
-                                            className="px-3 py-1 text-xs font-medium bg-cyan-400/10 text-cyan-400 rounded-full"
-                                        >
-                                            {feature}
-                                        </span>
-                                    ))}
+                                        ? "bg-gradient-to-br from-cyan-500 to-cyan-400 text-slate-950"
+                                        : "bg-slate-800 text-cyan-400"}`}>
+                                    {product.icon}
                                 </div>
-                            </motion.div>
 
-                            {/* Hover indicator */}
-                            {hoveredId !== product.id && (
-                                <p className="text-slate-500 text-sm mt-2">Hover to learn more →</p>
-                            )}
+                                {/* Title & Subtitle */}
+                                <h3 className="text-xl font-bold text-white mb-1">{product.title}</h3>
+                                <p className="text-cyan-400 text-sm font-medium mb-3">{product.subtitle}</p>
+
+                                {/* Description - Revealed on hover */}
+                                <motion.div
+                                    initial={false}
+                                    animate={{
+                                        height: hoveredId === product.id ? "auto" : 0,
+                                        opacity: hoveredId === product.id ? 1 : 0,
+                                    }}
+                                    transition={{ duration: 0.3 }}
+                                    className="overflow-hidden"
+                                >
+                                    <p className="text-slate-400 text-sm mb-4">{product.description}</p>
+
+                                    {/* Features */}
+                                    <div className="flex flex-wrap gap-2 mb-4">
+                                        {product.features.map((feature) => (
+                                            <span
+                                                key={feature}
+                                                className="px-3 py-1 text-xs font-medium bg-cyan-400/10 text-cyan-400 rounded-full"
+                                            >
+                                                {feature}
+                                            </span>
+                                        ))}
+                                    </div>
+
+                                    {/* View Product Link */}
+                                    <div className="flex items-center gap-1 text-cyan-400 text-sm font-medium">
+                                        View Product <ArrowRight className="w-4 h-4" />
+                                    </div>
+                                </motion.div>
+
+                                {/* Hover indicator */}
+                                {hoveredId !== product.id && (
+                                    <p className="text-slate-500 text-sm mt-2">Hover to learn more →</p>
+                                )}
+                            </Link>
                         </motion.div>
                     ))}
                 </div>
+
+                {/* View All Products Button */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    className="text-center mt-12"
+                >
+                    <Link
+                        href="/products"
+                        className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-cyan-500 to-cyan-400 text-slate-950 font-bold rounded-xl hover:shadow-lg hover:shadow-cyan-500/30 transition-all"
+                    >
+                        View All Products
+                        <ArrowRight className="w-5 h-5" />
+                    </Link>
+                </motion.div>
             </div>
         </section>
     );
