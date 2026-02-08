@@ -4,112 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import Footer from "@/components/Footer";
-import {
-    ArrowLeft,
-    ArrowRight,
-    Monitor,
-    Tv,
-    Layers,
-    Spline,
-    TouchpadIcon,
-    Eye,
-    Sun,
-    Cpu,
-} from "lucide-react";
-
-interface Product {
-    id: string;
-    title: string;
-    series: string;
-    description: string;
-    features: string[];
-    icon: React.ReactNode;
-    gradient: string;
-    bgColor: string;
-}
-
-const products: Product[] = [
-    {
-        id: "clarityx",
-        title: "ClarityX",
-        series: "Professional COB LED Series",
-        description: "Ultra-premium COB LED for studios, control rooms, and broadcast centers.",
-        features: ["P0.625-P1.87", "7680Hz Refresh", "15000:1 Contrast"],
-        icon: <Cpu className="w-7 h-7" />,
-        gradient: "from-violet-500 to-purple-600",
-        bgColor: "bg-violet-500/10",
-    },
-    {
-        id: "boardview",
-        title: "Clarity BoardView",
-        series: "Commercial GOB LED Series",
-        description: "Durable GOB panels for retail, corporate, and high-traffic venues.",
-        features: ["GOB Protection", "Anti-Collision", "IP30 Front"],
-        icon: <Monitor className="w-7 h-7" />,
-        gradient: "from-cyan-500 to-blue-600",
-        bgColor: "bg-cyan-500/10",
-    },
-    {
-        id: "claritywall",
-        title: "ClarityWall",
-        series: "DOOH & Outdoor LED Series",
-        description: "Weatherproof LED for billboards, stadiums, and large outdoor displays.",
-        features: ["8000+ nits", "IP65 Rated", "-40°C to 50°C"],
-        icon: <Tv className="w-7 h-7" />,
-        gradient: "from-orange-500 to-red-600",
-        bgColor: "bg-orange-500/10",
-    },
-    {
-        id: "optiview",
-        title: "Clarity OptiView",
-        series: "Economical Outdoor Series",
-        description: "Cost-effective outdoor LED for signage and general advertising.",
-        features: ["Budget-Friendly", "Quick Install", "Low Power"],
-        icon: <Sun className="w-7 h-7" />,
-        gradient: "from-green-500 to-emerald-600",
-        bgColor: "bg-green-500/10",
-    },
-    {
-        id: "claritytouch",
-        title: "ClarityTouch",
-        series: "Interactive All-in-One Series",
-        description: "Touch LED panels for meeting rooms, classrooms, and collaboration.",
-        features: ["40-Point Touch", "4K UHD", "Built-in OS"],
-        icon: <TouchpadIcon className="w-7 h-7" />,
-        gradient: "from-pink-500 to-rose-600",
-        bgColor: "bg-pink-500/10",
-    },
-    {
-        id: "clarityflex",
-        title: "ClarityFlex",
-        series: "Flexible LED Series",
-        description: "Bendable LED modules for curved walls and creative installations.",
-        features: ["≥500mm Bend", "Lightweight", "Custom Shapes"],
-        icon: <Spline className="w-7 h-7" />,
-        gradient: "from-amber-500 to-yellow-500",
-        bgColor: "bg-amber-500/10",
-    },
-    {
-        id: "clarityair",
-        title: "ClarityAir",
-        series: "Transparent LED Series",
-        description: "See-through LED panels for glass facades and architectural media.",
-        features: ["85% Transparent", "<12kg/m²", "IP65"],
-        icon: <Layers className="w-7 h-7" />,
-        gradient: "from-sky-400 to-cyan-500",
-        bgColor: "bg-sky-500/10",
-    },
-    {
-        id: "visionpro",
-        title: "Clarity Vision Pro",
-        series: "Professional SMD Outdoor Series",
-        description: "Cinema-grade outdoor video walls for professional installations.",
-        features: ["HDR10+", "7680Hz", "16-bit Color"],
-        icon: <Eye className="w-7 h-7" />,
-        gradient: "from-indigo-500 to-blue-600",
-        bgColor: "bg-indigo-500/10",
-    },
-];
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import { categories } from "@/data/productData";
 
 export default function ProductsPage() {
     const [hoveredId, setHoveredId] = useState<string | null>(null);
@@ -150,78 +46,80 @@ export default function ProductsPage() {
                             <span className="text-cyan-400">Solutions</span>
                         </h1>
                         <p className="text-slate-400 max-w-xl mx-auto">
-                            Explore our 8 product series engineered for every application
+                            Explore our comprehensive range of LED display solutions for every application
                         </p>
                     </motion.div>
                 </div>
             </section>
 
-            {/* Products Grid - Cleaner 2-column layout */}
+            {/* Categories Grid */}
             <section className="pb-24">
                 <div className="max-w-5xl mx-auto px-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                        {products.map((product, index) => (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {categories.map((category, index) => (
                             <motion.div
-                                key={product.id}
+                                key={category.id}
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.4, delay: index * 0.05 }}
+                                transition={{ duration: 0.4, delay: index * 0.1 }}
                             >
-                                <Link href={`/products/${product.id}`}>
+                                <Link href={`/products/${category.slug}`}>
                                     <div
-                                        onMouseEnter={() => setHoveredId(product.id)}
+                                        onMouseEnter={() => setHoveredId(category.id)}
                                         onMouseLeave={() => setHoveredId(null)}
                                         className={`
-                                            group relative p-6 rounded-2xl border transition-all duration-300 cursor-pointer
-                                            ${hoveredId === product.id
-                                                ? "bg-slate-800/80 border-cyan-500/50 shadow-lg shadow-cyan-500/10"
+                                            group relative p-8 rounded-2xl border transition-all duration-300 cursor-pointer
+                                            min-h-[220px] flex flex-col justify-between
+                                            ${hoveredId === category.id
+                                                ? `${category.bgColor} ${category.borderColor} shadow-xl`
                                                 : "bg-slate-900/50 border-slate-800 hover:border-slate-700"
                                             }
                                         `}
                                     >
-                                        <div className="flex items-start gap-5">
+                                        {/* Gradient Background on Hover */}
+                                        <div
+                                            className={`
+                                                absolute inset-0 rounded-2xl bg-gradient-to-br ${category.gradient} 
+                                                opacity-0 group-hover:opacity-5 transition-opacity duration-300
+                                            `}
+                                        />
+
+                                        <div className="relative z-10">
                                             {/* Icon */}
-                                            <div className={`
-                                                shrink-0 w-14 h-14 rounded-xl flex items-center justify-center
-                                                bg-gradient-to-br ${product.gradient} text-white
-                                                group-hover:scale-110 transition-transform duration-300
-                                            `}>
-                                                {product.icon}
+                                            <div
+                                                className={`
+                                                    w-16 h-16 rounded-xl flex items-center justify-center text-3xl mb-4
+                                                    bg-gradient-to-br ${category.gradient}
+                                                    group-hover:scale-110 transition-transform duration-300
+                                                    shadow-lg
+                                                `}
+                                            >
+                                                {category.icon}
                                             </div>
 
                                             {/* Content */}
-                                            <div className="flex-1 min-w-0">
-                                                <div className="flex items-center justify-between mb-1">
-                                                    <h3 className="text-lg font-bold text-white group-hover:text-cyan-400 transition-colors">
-                                                        {product.title}
-                                                    </h3>
-                                                    <ArrowRight className={`
-                                                        w-4 h-4 transition-all duration-300
-                                                        ${hoveredId === product.id
-                                                            ? "text-cyan-400 translate-x-0 opacity-100"
-                                                            : "text-slate-600 -translate-x-2 opacity-0"
-                                                        }
-                                                    `} />
-                                                </div>
-                                                <p className="text-cyan-400/70 text-sm font-medium mb-2">
-                                                    {product.series}
-                                                </p>
-                                                <p className="text-slate-400 text-sm mb-3 line-clamp-1">
-                                                    {product.description}
-                                                </p>
+                                            <h3 className="text-xl font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors">
+                                                {category.name}
+                                            </h3>
+                                            <p className="text-slate-400 text-sm line-clamp-2">
+                                                {category.description}
+                                            </p>
+                                        </div>
 
-                                                {/* Feature Tags */}
-                                                <div className="flex flex-wrap gap-2">
-                                                    {product.features.map((feature) => (
-                                                        <span
-                                                            key={feature}
-                                                            className="px-2.5 py-1 text-xs bg-slate-800/80 text-slate-300 rounded-md"
-                                                        >
-                                                            {feature}
-                                                        </span>
-                                                    ))}
-                                                </div>
-                                            </div>
+                                        {/* Arrow */}
+                                        <div className="relative z-10 flex items-center justify-between mt-4 pt-4 border-t border-slate-800/50">
+                                            <span className="text-sm text-cyan-400/70 font-medium">
+                                                View Products
+                                            </span>
+                                            <ArrowRight
+                                                className={`
+                                                    w-5 h-5 transition-all duration-300
+                                                    ${hoveredId === category.id
+                                                        ? "text-cyan-400 translate-x-0"
+                                                        : "text-slate-600 -translate-x-2"
+                                                    }
+                                                `}
+                                            />
                                         </div>
                                     </div>
                                 </Link>
