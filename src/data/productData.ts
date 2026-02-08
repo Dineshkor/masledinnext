@@ -24,6 +24,7 @@ export interface Product {
     icon: string;
     gradient: string;
     bgColor: string;
+    images: string[];
 }
 
 export interface Category {
@@ -105,6 +106,7 @@ export const products: Product[] = [
         icon: "💎",
         gradient: "from-blue-400 to-blue-600",
         bgColor: "bg-blue-500/10",
+        images: ["/MasBoard.png", "/MasBoard_1.png"],
         specs: [
             { label: "Pixel Pitch", value: "P0.9 - P1.5" },
             { label: "Brightness", value: "≥800 nits" },
@@ -141,6 +143,7 @@ export const products: Product[] = [
         icon: "📊",
         gradient: "from-blue-500 to-cyan-600",
         bgColor: "bg-cyan-500/10",
+        images: ["/MasBoard.png", "/MasBoard_1.png"],
         specs: [
             { label: "Pixel Pitch", value: "P1.5 - P2.5" },
             { label: "Brightness", value: "≥1000 nits" },
@@ -177,6 +180,7 @@ export const products: Product[] = [
         icon: "🔬",
         gradient: "from-violet-500 to-purple-600",
         bgColor: "bg-violet-500/10",
+        images: ["/MasXCOB.png", "/MasXCOB_1.png"],
         specs: [
             { label: "Pixel Pitch", value: "P0.6 - P1.2" },
             { label: "Brightness", value: "≥600 nits" },
@@ -213,6 +217,7 @@ export const products: Product[] = [
         icon: "🌀",
         gradient: "from-pink-500 to-rose-600",
         bgColor: "bg-pink-500/10",
+        images: ["/MasFlex.png", "/MasFlex-1.png"],
         specs: [
             { label: "Pixel Pitch", value: "P1.8 - P3.0" },
             { label: "Brightness", value: "≥1200 nits" },
@@ -251,6 +256,7 @@ export const products: Product[] = [
         icon: "☀️",
         gradient: "from-orange-500 to-red-600",
         bgColor: "bg-orange-500/10",
+        images: ["/MasWall.png", "/MasWall_1.png"],
         specs: [
             { label: "Pixel Pitch", value: "P4 - P10" },
             { label: "Brightness", value: "≥8000 nits" },
@@ -287,6 +293,7 @@ export const products: Product[] = [
         icon: "⛈️",
         gradient: "from-slate-600 to-slate-800",
         bgColor: "bg-slate-500/10",
+        images: ["/MasVision.png", "/MasVision_1.png"],
         specs: [
             { label: "Pixel Pitch", value: "P3.9 - P8" },
             { label: "Brightness", value: "≥6500 nits" },
@@ -323,6 +330,7 @@ export const products: Product[] = [
         icon: "🏙️",
         gradient: "from-teal-500 to-emerald-600",
         bgColor: "bg-teal-500/10",
+        images: ["/MasOptiView.png", "/MasOptiView_1.png"],
         specs: [
             { label: "Pixel Pitch", value: "P2.5 - P6" },
             { label: "Brightness", value: "≥5500 nits" },
@@ -361,6 +369,7 @@ export const products: Product[] = [
         icon: "🎭",
         gradient: "from-green-500 to-emerald-600",
         bgColor: "bg-green-500/10",
+        images: ["/MasTouch.png", "/MasTouch_1.png"],
         specs: [
             { label: "Pixel Pitch", value: "P2.6 - P3.9" },
             { label: "Brightness", value: "≥1200 nits" },
@@ -397,6 +406,7 @@ export const products: Product[] = [
         icon: "🎪",
         gradient: "from-lime-500 to-green-600",
         bgColor: "bg-lime-500/10",
+        images: ["/MasTouch.png", "/MasTouch_1.png"],
         specs: [
             { label: "Pixel Pitch", value: "P3.9 - P5.9" },
             { label: "Brightness", value: "≥5500 nits" },
@@ -435,6 +445,7 @@ export const products: Product[] = [
         icon: "🪟",
         gradient: "from-purple-400 to-violet-600",
         bgColor: "bg-purple-500/10",
+        images: ["/MasAir.png", "/MasAir_1.png"],
         specs: [
             { label: "Pixel Pitch", value: "P3.9 - P10" },
             { label: "Transparency", value: "≥85%" },
@@ -473,6 +484,7 @@ export const products: Product[] = [
         icon: "🎯",
         gradient: "from-amber-400 to-orange-500",
         bgColor: "bg-amber-500/10",
+        images: ["/MasOptiView.png", "/MasOptiView_1.png"],
         specs: [
             { label: "Pixel Pitch", value: "P1.8 - P2.5" },
             { label: "Screen Sizes", value: "43\" / 55\" / 65\"" },

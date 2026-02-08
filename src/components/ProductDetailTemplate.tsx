@@ -1,8 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { ArrowLeft, ArrowRight, CheckCircle } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowLeft, ArrowRight, CheckCircle, ChevronLeft, ChevronRight } from "lucide-react";
 import Footer from "@/components/Footer";
 import { Product, getCategoryBySlug, getProductNavigation } from "@/data/productData";
 
@@ -15,6 +16,19 @@ export default function ProductDetailTemplate({
 }: ProductDetailTemplateProps) {
     const category = getCategoryBySlug(product.categorySlug);
     const { prev, next } = getProductNavigation(product);
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+    const nextImage = () => {
+        setCurrentImageIndex((prev) =>
+            prev === product.images.length - 1 ? 0 : prev + 1
+        );
+    };
+
+    const prevImage = () => {
+        setCurrentImageIndex((prev) =>
+            prev === 0 ? product.images.length - 1 : prev - 1
+        );
+    };
 
     return (
         <main className="min-h-screen bg-slate-950">
@@ -39,50 +53,113 @@ export default function ProductDetailTemplate({
                 </div>
             </nav>
 
-            {/* Hero Section */}
+            {/* Hero Section with Image */}
             <section className={`pt-32 pb-16 relative overflow-hidden`}>
                 <div className={`absolute inset-0 bg-gradient-to-br ${product.gradient} opacity-10`} />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent" />
 
                 <div className="max-w-6xl mx-auto px-6 relative">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="text-center"
-                    >
-                        {/* Breadcrumb */}
-                        <div className="flex items-center justify-center gap-2 text-sm text-slate-500 mb-6">
-                            <Link href="/products" className="hover:text-cyan-400 transition-colors">
-                                Products
-                            </Link>
-                            <span>/</span>
-                            <Link
-                                href={`/products/${product.categorySlug}`}
-                                className="hover:text-cyan-400 transition-colors"
-                            >
-                                {category?.name}
-                            </Link>
-                            <span>/</span>
-                            <span className="text-slate-300">{product.name}</span>
-                        </div>
-
-                        <div className="text-6xl mb-6">{product.icon}</div>
-                        <span className="inline-block px-4 py-2 mb-4 text-cyan-400 text-sm font-medium bg-cyan-400/10 rounded-full border border-cyan-400/20">
-                            {product.series}
-                        </span>
-                        <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
-                            {product.name}
-                        </h1>
-                        <p className="text-xl text-cyan-400 font-medium mb-4">{product.tagline}</p>
-                        <p className="text-slate-400 max-w-2xl mx-auto mb-8">{product.description}</p>
-                        <Link
-                            href="/quote"
-                            className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-cyan-500 to-cyan-400 text-slate-950 font-bold rounded-xl hover:shadow-lg hover:shadow-cyan-500/30 transition-all"
-                        >
-                            Request Quote
-                            <ArrowRight className="w-5 h-5" />
+                    {/* Breadcrumb */}
+                    <div className="flex items-center justify-center gap-2 text-sm text-slate-500 mb-6">
+                        <Link href="/products" className="hover:text-cyan-400 transition-colors">
+                            Products
                         </Link>
-                    </motion.div>
+                        <span>/</span>
+                        <Link
+                            href={`/products/${product.categorySlug}`}
+                            className="hover:text-cyan-400 transition-colors"
+                        >
+                            {category?.name}
+                        </Link>
+                        <span>/</span>
+                        <span className="text-slate-300">{product.name}</span>
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                        {/* Image Gallery */}
+                        <motion.div
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            className="relative"
+                        >
+                            {/* Main Image */}
+                            <div className="relative aspect-square rounded-2xl overflow-hidden bg-slate-900/50 border border-slate-800">
+                                <AnimatePresence mode="wait">
+                                    <motion.div
+                                        key={currentImageIndex}
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        exit={{ opacity: 0 }}
+                                        transition={{ duration: 0.3 }}
+                                        className="relative w-full h-full"
+                                    >
+                                        <img
+                                            src={product.images[currentImageIndex]}
+                                            alt={`${product.name} - Image ${currentImageIndex + 1}`}
+                                            className="w-full h-full object-contain p-4"
+                                        />
+                                    </motion.div>
+                                </AnimatePresence>
+
+                                {/* Navigation Arrows */}
+                                {product.images.length > 1 && (
+                                    <>
+                                        <button
+                                            onClick={prevImage}
+                                            className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-slate-800/80 backdrop-blur-sm flex items-center justify-center text-white hover:bg-cyan-500 transition-colors"
+                                        >
+                                            <ChevronLeft className="w-5 h-5" />
+                                        </button>
+                                        <button
+                                            onClick={nextImage}
+                                            className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-slate-800/80 backdrop-blur-sm flex items-center justify-center text-white hover:bg-cyan-500 transition-colors"
+                                        >
+                                            <ChevronRight className="w-5 h-5" />
+                                        </button>
+                                    </>
+                                )}
+                            </div>
+
+                            {/* Thumbnail Dots */}
+                            {product.images.length > 1 && (
+                                <div className="flex justify-center gap-2 mt-4">
+                                    {product.images.map((_, index) => (
+                                        <button
+                                            key={index}
+                                            onClick={() => setCurrentImageIndex(index)}
+                                            className={`w-3 h-3 rounded-full transition-all ${index === currentImageIndex
+                                                ? "bg-cyan-400 scale-110"
+                                                : "bg-slate-600 hover:bg-slate-500"
+                                                }`}
+                                        />
+                                    ))}
+                                </div>
+                            )}
+                        </motion.div>
+
+                        {/* Product Info */}
+                        <motion.div
+                            initial={{ opacity: 0, x: 20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            className="text-center lg:text-left"
+                        >
+                            <span className="inline-block px-4 py-2 mb-4 text-cyan-400 text-sm font-medium bg-cyan-400/10 rounded-full border border-cyan-400/20">
+                                {product.series}
+                            </span>
+                            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+                                {product.name}
+                            </h1>
+                            <p className="text-xl text-cyan-400 font-medium mb-4">{product.tagline}</p>
+                            <p className="text-slate-400 mb-8">{product.description}</p>
+                            <Link
+                                href="/quote"
+                                className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-cyan-500 to-cyan-400 text-slate-950 font-bold rounded-xl hover:shadow-lg hover:shadow-cyan-500/30 transition-all"
+                            >
+                                Request Quote
+                                <ArrowRight className="w-5 h-5" />
+                            </Link>
+                        </motion.div>
+                    </div>
                 </div>
             </section>
 
