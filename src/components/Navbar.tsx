@@ -8,10 +8,10 @@ import Logo from "./Logo";
 
 const navLinks = [
     { name: "Home", href: "/" },
+    { name: "About Us", href: "/about" },
     { name: "Products", href: "/products" },
     { name: "Markets", href: "/#markets" },
     { name: "Expertise", href: "/#expertise" },
-    { name: "Case Studies", href: "/#approach" },
     { name: "Contact", href: "/contact" },
 ];
 
