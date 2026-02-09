@@ -10,8 +10,8 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL("https://masledinnext.vercel.app"),
   title: {
-    default: "MAS LED | Premium LED Display Solutions in India",
-    template: "%s | MAS LED"
+    default: "MAS LED Display Screens",
+    template: "%s | MAS LED Display Screens"
   },
   description: "India's leading B2B LED display manufacturer. Premium indoor, outdoor, transparent, rental & flexible LED screens for businesses. Quality displays with 24/7 support.",
   keywords: [
