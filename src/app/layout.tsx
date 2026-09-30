@@ -1,11 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
-
-const inter = Inter({
-  subsets: ["latin"],
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://masledinnext.vercel.app"),
@@ -13,7 +7,7 @@ export const metadata: Metadata = {
     default: "MAS LED Display Screens",
     template: "%s | MAS LED Display Screens"
   },
-  description: "India's leading B2B LED display manufacturer. Premium indoor, outdoor, transparent, rental & flexible LED screens for businesses. Quality displays with 24/7 support.",
+  description: "MAS LED display systems for indoor, outdoor, rental, transparent and digital signage projects. Explore catalogue-backed specifications and discuss your project.",
   keywords: [
     "LED display",
     "LED screen",
@@ -46,21 +40,21 @@ export const metadata: Metadata = {
     url: "https://masledinnext.vercel.app",
     siteName: "MAS LED",
     title: "MAS LED | Premium LED Display Solutions in India",
-    description: "India's leading B2B LED display manufacturer. Premium indoor, outdoor, transparent, rental & flexible LED screens for businesses.",
+    description: "Explore MAS LED display systems for indoor, outdoor, rental, transparent and digital signage projects.",
     images: [
       {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "MAS LED - Premium LED Display Solutions",
+        url: "/catalogue/flexedge-main.jpg",
+        width: 980,
+        height: 391,
+        alt: "MAS LED outdoor curved display installation",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
     title: "MAS LED | Premium LED Display Solutions in India",
-    description: "India's leading B2B LED display manufacturer. Premium indoor, outdoor, transparent & rental LED screens.",
-    images: ["/og-image.png"],
+    description: "MAS LED display systems for indoor, outdoor, rental and transparent projects.",
+    images: ["/catalogue/flexedge-main.jpg"],
   },
   robots: {
     index: true,
@@ -88,7 +82,7 @@ export const jsonLd = {
   legalName: "Mastech Advertising Solutions Pvt Ltd",
   url: "https://masledinnext.vercel.app",
   logo: "https://masledinnext.vercel.app/logo.png",
-  description: "India's leading B2B LED display manufacturer providing premium indoor, outdoor, transparent, and rental LED screen solutions.",
+  description: "LED display systems for indoor, outdoor, rental, transparent and digital signage projects.",
   address: {
     "@type": "PostalAddress",
     streetAddress: "1st Floor, Wegmans Business Park, Plot No 3, Knowledge Park-3",
@@ -126,7 +120,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className={`${inter.className} antialiased bg-slate-950 text-white`}>
+      <body className="antialiased bg-[#050b12] text-white">
         {children}
       </body>
     </html>

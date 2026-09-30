@@ -1,4 +1,5 @@
 import { MetadataRoute } from 'next'
+import { categories, products } from '@/data/productData'
 
 export default function sitemap(): MetadataRoute.Sitemap {
     const baseUrl = 'https://masledinnext.vercel.app'
@@ -38,30 +39,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ]
 
     // Category pages
-    const categories = ['indoor', 'outdoor', 'rental', 'transparent', 'standee']
     const categoryPages = categories.map(category => ({
-        url: `${baseUrl}/products/${category}`,
+        url: `${baseUrl}/products/${category.slug}`,
         lastModified: new Date(),
         changeFrequency: 'weekly' as const,
         priority: 0.8,
     }))
 
     // Product pages
-    const products = [
-        { category: 'indoor', slug: 'infinity' },
-        { category: 'indoor', slug: 'hd-pro' },
-        { category: 'indoor', slug: 'cob' },
-        { category: 'indoor', slug: 'bendex' },
-        { category: 'outdoor', slug: 'ox' },
-        { category: 'outdoor', slug: 'storm' },
-        { category: 'outdoor', slug: 'flexedge' },
-        { category: 'rental', slug: 'rx-indoor' },
-        { category: 'rental', slug: 'eventsmax' },
-        { category: 'transparent', slug: 'transglow' },
-        { category: 'standee', slug: 'standpro' },
-    ]
     const productPages = products.map(product => ({
-        url: `${baseUrl}/products/${product.category}/${product.slug}`,
+        url: `${baseUrl}/products/${product.categorySlug}/${product.id}`,
         lastModified: new Date(),
         changeFrequency: 'monthly' as const,
         priority: 0.7,

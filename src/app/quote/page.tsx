@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import {
     ArrowLeft,
-    Send,
     User,
     Mail,
     Phone,
@@ -15,6 +14,7 @@ import {
     AlertCircle,
     Loader2
 } from "lucide-react";
+import { products } from "@/data/productData";
 
 interface FormData {
     name: string;
@@ -25,15 +25,7 @@ interface FormData {
     message: string;
 }
 
-const projectTypes = [
-    "Commercial Indoor Display",
-    "Outdoor Billboard/DOOH",
-    "Transparent LED",
-    "Flexible/Curved LED",
-    "Interactive Display",
-    "Stadium/Venue Display",
-    "Other",
-];
+const projectTypes = [...products.map((product) => product.name), "Taxi-top LED / VMS enquiry", "Not sure yet"];
 
 export default function QuotePage() {
     const [formData, setFormData] = useState<FormData>({
@@ -65,7 +57,7 @@ export default function QuotePage() {
 *Email:* ${formData.email}
 *Phone:* ${formData.phone || "Not provided"}
 *Company:* ${formData.company || "Not provided"}
-*Project Type:* ${formData.projectType}
+*Display Series:* ${formData.projectType}
 
 *Project Details:*
 ${formData.message}`;
@@ -135,7 +127,7 @@ ${formData.message}`;
                         Request a Quote
                     </h1>
                     <p className="text-slate-400 max-w-xl mx-auto">
-                        Tell us about your project and our team will get back to you within 24 hours with a customized solution.
+                        Tell us about your project and share the details with our team on WhatsApp.
                     </p>
                 </motion.div>
 
@@ -157,7 +149,7 @@ ${formData.message}`;
                             </div>
                             <h2 className="text-2xl font-bold text-white mb-3">Thank You!</h2>
                             <p className="text-slate-400 mb-6">
-                                Your quote request has been submitted successfully. Our team will contact you shortly.
+                                WhatsApp opened with your project details. Send the prepared message there to reach our team.
                             </p>
                             <Link
                                 href="/"
@@ -262,7 +254,7 @@ ${formData.message}`;
                             {/* Project Type */}
                             <div>
                                 <label htmlFor="projectType" className="block text-sm font-medium text-slate-300 mb-2">
-                                    Project Type *
+                                    Display series *
                                 </label>
                                 <select
                                     id="projectType"
@@ -279,7 +271,7 @@ ${formData.message}`;
                                     }}
                                 >
                                     <option value="" disabled className="bg-slate-800">
-                                        Select project type
+                                        Select a series or enquiry type
                                     </option>
                                     {projectTypes.map((type) => (
                                         <option key={type} value={type} className="bg-slate-800">

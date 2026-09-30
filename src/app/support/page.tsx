@@ -19,23 +19,23 @@ import Footer from "@/components/Footer";
 const faqs = [
     {
         question: "What is the typical lead time for LED display orders?",
-        answer: "Lead times vary based on product type and customization requirements. Standard products typically ship within 2-3 weeks, while custom solutions may take 4-6 weeks. Contact our sales team for specific timelines."
+        answer: "Lead times depend on the display series, configuration and installation scope. Contact our team with your requirements for a project timeline."
     },
     {
         question: "Do you provide installation services?",
-        answer: "Yes! We offer complete turnkey solutions including professional installation, on-site calibration, and operator training. Our certified technicians ensure your display is set up for optimal performance."
+        answer: "Installation scope is planned for each project. Tell our team about your site and display requirements to discuss setup and commissioning."
     },
     {
         question: "What warranty do you offer on LED displays?",
-        answer: "All Mas LED products come with a comprehensive 3-year warranty covering manufacturing defects. Extended warranty options and Annual Maintenance Contracts (AMC) are also available."
+        answer: "Warranty coverage depends on the product and your project agreement. Share your quotation or purchase documents with our team to confirm the applicable terms."
     },
     {
         question: "Can displays be customized for specific dimensions?",
-        answer: "Absolutely! Our modular LED systems can be configured to any size and resolution. Our engineering team will work with you to design a solution that fits your exact requirements."
+        answer: "Many LED series use modular cabinets that can be arranged for different dimensions. The available size and resolution depend on the selected series and site."
     },
     {
         question: "What after-sales support do you provide?",
-        answer: "We offer 24/7 technical support, preventive maintenance programs, spare parts availability, and on-site service across India. Our support team is always ready to assist you."
+        answer: "Contact our support team with the display series, site and a description of the issue. They can advise on the service options for your project."
     },
 ];
 

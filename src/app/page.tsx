@@ -5,12 +5,14 @@ import MarketTicker from "@/components/MarketTicker";
 import FeatureSection from "@/components/FeatureSection";
 import ApproachTimeline from "@/components/ApproachTimeline";
 import Footer from "@/components/Footer";
+import ExperienceJourney from "@/components/ExperienceJourney";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-slate-950">
+    <main className="immersive-home min-h-screen">
       <Navbar />
       <Hero />
+      <ExperienceJourney />
       <ProductShowcase />
       <MarketTicker />
       <FeatureSection />

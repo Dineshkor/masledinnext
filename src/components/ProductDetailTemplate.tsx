@@ -1,316 +1,59 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ArrowRight, CheckCircle, ChevronLeft, ChevronRight } from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
+import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
+import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Product, getCategoryBySlug, getProductNavigation } from "@/data/productData";
 
-interface ProductDetailTemplateProps {
-    product: Product;
-}
+export default function ProductDetailTemplate({ product }: { product: Product }) {
+  const [imageIndex, setImageIndex] = useState(0);
+  const reduceMotion = useReducedMotion();
+  const category = getCategoryBySlug(product.categorySlug);
+  const { prev, next } = getProductNavigation(product);
 
-export default function ProductDetailTemplate({
-    product,
-}: ProductDetailTemplateProps) {
-    const category = getCategoryBySlug(product.categorySlug);
-    const { prev, next } = getProductNavigation(product);
-    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  return (
+    <main className="min-h-screen bg-[#081722]">
+      <Navbar />
+      <section className="product-detail-hero">
+        <div className="product-detail-inner">
+          <div className="product-detail-copy">
+            <Link href={`/products/${product.categorySlug}`} className="category-back"><ArrowLeft size={16} aria-hidden="true" /> {category?.name.toUpperCase()}</Link>
+            <span className="section-kicker"><span /> MAS / {product.series.toUpperCase()}</span>
+            <h1>{product.name}</h1>
+            <p className="product-detail-tagline">{product.tagline}</p>
+            <p className="product-detail-description">{product.description}</p>
+            <div className="product-detail-actions"><Link href="/quote" className="hero-primary">Request a quote <ArrowUpRight size={19} aria-hidden="true" /></Link><a href="#specifications" className="hero-secondary">View specifications <ArrowRight size={18} aria-hidden="true" /></a></div>
+            <div className="product-detail-key-specs">{product.specs.slice(0, 2).map((spec) => <div key={spec.label}><span>{spec.label}</span><strong>{spec.value}</strong></div>)}</div>
+          </div>
+          <div className="product-detail-gallery">
+            <div className="product-detail-main-image"><Image key={product.images[imageIndex]} src={product.images[imageIndex]} alt={`${product.name} ${imageIndex === 0 ? "installation" : "detail"}`} fill sizes="(max-width: 900px) 100vw, 60vw" priority /></div>
+            <div className="product-detail-gallery-controls"><span>0{imageIndex + 1} / 0{product.images.length}</span><div>{product.images.map((_, index) => <button type="button" key={index} onClick={() => setImageIndex(index)} aria-label={`Show ${product.name} image ${index + 1}`} aria-pressed={imageIndex === index} className={imageIndex === index ? "active" : ""} />)}</div></div>
+          </div>
+        </div>
+      </section>
 
-    const nextImage = () => {
-        setCurrentImageIndex((prev) =>
-            prev === product.images.length - 1 ? 0 : prev + 1
-        );
-    };
+      <section id="specifications" className="product-detail-specs">
+        <div className="product-detail-section-inner">
+          <div className="product-detail-section-heading"><span className="section-kicker"><span /> TECHNICAL PROFILE</span><h2>Made for the <em>brief.</em></h2><p>Figures vary by pixel pitch where noted. Our team can help select the right configuration for the site.</p></div>
+          <div className="product-detail-spec-table">{product.specs.map((spec) => <div key={spec.label}><span>{spec.label}</span><strong>{spec.value}</strong></div>)}</div>
+        </div>
+      </section>
 
-    const prevImage = () => {
-        setCurrentImageIndex((prev) =>
-            prev === 0 ? product.images.length - 1 : prev - 1
-        );
-    };
+      <section className="product-detail-uses">
+        <div className="product-detail-section-inner">
+          <span className="section-kicker"><span /> DESIGN POSSIBILITIES</span>
+          <h2>Built to belong <em>anywhere.</em></h2>
+          <div className="product-detail-feature-grid">{product.features.map((feature, index) => <motion.div key={feature.title} initial={reduceMotion ? false : { opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: .45, delay: index * .08 }}><span>0{index + 1}</span><h3>{feature.title}</h3><p>{feature.description}</p></motion.div>)}</div>
+          <div className="product-detail-applications"><h3>Where it works</h3><div>{product.applications.map((application) => <span key={application}>{application}</span>)}</div></div>
+        </div>
+      </section>
 
-    return (
-        <main className="min-h-screen bg-slate-950">
-            {/* Navbar */}
-            <nav className="fixed top-4 left-4 right-4 z-50 glass rounded-2xl">
-                <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-                    <Link href="/" className="flex items-center gap-2 group">
-                        <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-400 to-cyan-600 flex items-center justify-center shadow-lg shadow-cyan-500/30">
-                            <span className="text-slate-950 font-bold text-lg">M</span>
-                        </div>
-                        <span className="text-xl font-bold text-white group-hover:text-cyan-400 transition-colors">
-                            Mas LED
-                        </span>
-                    </Link>
-                    <Link
-                        href={`/products/${product.categorySlug}`}
-                        className="flex items-center gap-2 text-slate-400 hover:text-cyan-400 transition-colors"
-                    >
-                        <ArrowLeft className="w-4 h-4" />
-                        {category?.name || "Back"}
-                    </Link>
-                </div>
-            </nav>
-
-            {/* Hero Section with Image */}
-            <section className={`pt-32 pb-16 relative overflow-hidden`}>
-                <div className={`absolute inset-0 bg-gradient-to-br ${product.gradient} opacity-10`} />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent" />
-
-                <div className="max-w-6xl mx-auto px-6 relative">
-                    {/* Breadcrumb */}
-                    <div className="flex items-center justify-center gap-2 text-sm text-slate-500 mb-6">
-                        <Link href="/products" className="hover:text-cyan-400 transition-colors">
-                            Products
-                        </Link>
-                        <span>/</span>
-                        <Link
-                            href={`/products/${product.categorySlug}`}
-                            className="hover:text-cyan-400 transition-colors"
-                        >
-                            {category?.name}
-                        </Link>
-                        <span>/</span>
-                        <span className="text-slate-300">{product.name}</span>
-                    </div>
-
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                        {/* Image Gallery */}
-                        <motion.div
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            className="relative"
-                        >
-                            {/* Main Image */}
-                            <div className="relative aspect-square rounded-2xl overflow-hidden bg-slate-900/50 border border-slate-800">
-                                <AnimatePresence mode="wait">
-                                    <motion.div
-                                        key={currentImageIndex}
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
-                                        exit={{ opacity: 0 }}
-                                        transition={{ duration: 0.3 }}
-                                        className="relative w-full h-full"
-                                    >
-                                        <img
-                                            src={product.images[currentImageIndex]}
-                                            alt={`${product.name} - Image ${currentImageIndex + 1}`}
-                                            className="w-full h-full object-contain p-4"
-                                        />
-                                    </motion.div>
-                                </AnimatePresence>
-
-                                {/* Navigation Arrows */}
-                                {product.images.length > 1 && (
-                                    <>
-                                        <button
-                                            onClick={prevImage}
-                                            className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-slate-800/80 backdrop-blur-sm flex items-center justify-center text-white hover:bg-cyan-500 transition-colors"
-                                        >
-                                            <ChevronLeft className="w-5 h-5" />
-                                        </button>
-                                        <button
-                                            onClick={nextImage}
-                                            className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-slate-800/80 backdrop-blur-sm flex items-center justify-center text-white hover:bg-cyan-500 transition-colors"
-                                        >
-                                            <ChevronRight className="w-5 h-5" />
-                                        </button>
-                                    </>
-                                )}
-                            </div>
-
-                            {/* Thumbnail Dots */}
-                            {product.images.length > 1 && (
-                                <div className="flex justify-center gap-2 mt-4">
-                                    {product.images.map((_, index) => (
-                                        <button
-                                            key={index}
-                                            onClick={() => setCurrentImageIndex(index)}
-                                            className={`w-3 h-3 rounded-full transition-all ${index === currentImageIndex
-                                                ? "bg-cyan-400 scale-110"
-                                                : "bg-slate-600 hover:bg-slate-500"
-                                                }`}
-                                        />
-                                    ))}
-                                </div>
-                            )}
-                        </motion.div>
-
-                        {/* Product Info */}
-                        <motion.div
-                            initial={{ opacity: 0, x: 20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            className="text-center lg:text-left"
-                        >
-                            <span className="inline-block px-4 py-2 mb-4 text-cyan-400 text-sm font-medium bg-cyan-400/10 rounded-full border border-cyan-400/20">
-                                {product.series}
-                            </span>
-                            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-                                {product.name}
-                            </h1>
-                            <p className="text-xl text-cyan-400 font-medium mb-4">{product.tagline}</p>
-                            <p className="text-slate-400 mb-8">{product.description}</p>
-                            <Link
-                                href="/quote"
-                                className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-cyan-500 to-cyan-400 text-slate-950 font-bold rounded-xl hover:shadow-lg hover:shadow-cyan-500/30 transition-all"
-                            >
-                                Request Quote
-                                <ArrowRight className="w-5 h-5" />
-                            </Link>
-                        </motion.div>
-                    </div>
-                </div>
-            </section>
-
-            {/* Specs Bar */}
-            <section className="py-8 border-y border-slate-800 bg-slate-900/50">
-                <div className="max-w-6xl mx-auto px-6">
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-                        {product.specs.map((spec) => (
-                            <div key={spec.label} className="text-center">
-                                <p className="text-cyan-400 font-bold text-lg">{spec.value}</p>
-                                <p className="text-slate-500 text-xs">{spec.label}</p>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* Features Section */}
-            <section className="py-20">
-                <div className="max-w-6xl mx-auto px-6">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        className="text-center mb-12"
-                    >
-                        <h2 className="text-3xl font-bold text-white mb-4">Product Features</h2>
-                        <p className="text-slate-400">Advanced technology for superior performance</p>
-                    </motion.div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {product.features.map((feature, index) => (
-                            <motion.div
-                                key={feature.title}
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: index * 0.1 }}
-                                className="p-6 rounded-xl bg-slate-900/50 border border-slate-800 hover:border-cyan-500/30 transition-colors"
-                            >
-                                <CheckCircle className="w-8 h-8 text-cyan-400 mb-4" />
-                                <h3 className="text-white font-semibold mb-2">{feature.title}</h3>
-                                <p className="text-slate-400 text-sm">{feature.description}</p>
-                            </motion.div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* Applications Section */}
-            <section className="py-20 bg-slate-900/30">
-                <div className="max-w-6xl mx-auto px-6">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        className="text-center mb-12"
-                    >
-                        <h2 className="text-3xl font-bold text-white mb-4">Target Applications</h2>
-                        <p className="text-slate-400">Ideal solutions for diverse environments</p>
-                    </motion.div>
-
-                    <div className="flex flex-wrap justify-center gap-4">
-                        {product.applications.map((app, index) => (
-                            <motion.div
-                                key={app}
-                                initial={{ opacity: 0, scale: 0.9 }}
-                                whileInView={{ opacity: 1, scale: 1 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: index * 0.05 }}
-                                className="px-6 py-3 rounded-full bg-slate-800 border border-slate-700 text-white font-medium"
-                            >
-                                {app}
-                            </motion.div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* CTA Section */}
-            <section className="py-20">
-                <div className="max-w-3xl mx-auto px-6 text-center">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        className="p-10 rounded-3xl bg-gradient-to-br from-slate-900 to-slate-800 border border-slate-700"
-                    >
-                        <h2 className="text-3xl font-bold text-white mb-4">
-                            Ready to Transform Your Space?
-                        </h2>
-                        <p className="text-slate-400 mb-8">
-                            Get a customized quote for your {product.name} requirements.
-                        </p>
-                        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                            <Link
-                                href="/quote"
-                                className="px-8 py-4 bg-gradient-to-r from-cyan-500 to-cyan-400 text-slate-950 font-bold rounded-xl hover:shadow-lg hover:shadow-cyan-500/30 transition-all"
-                            >
-                                Get Quote
-                            </Link>
-                            <Link
-                                href="/contact"
-                                className="px-8 py-4 border border-slate-600 text-white font-semibold rounded-xl hover:bg-slate-800 transition-all"
-                            >
-                                Contact Us
-                            </Link>
-                        </div>
-                    </motion.div>
-                </div>
-            </section>
-
-            {/* Navigation */}
-            <section className="py-8 border-t border-slate-800">
-                <div className="max-w-6xl mx-auto px-6">
-                    <div className="flex justify-between items-center">
-                        {prev ? (
-                            <Link
-                                href={`/products/${product.categorySlug}/${prev.id}`}
-                                className="flex items-center gap-2 text-slate-400 hover:text-cyan-400 transition-colors"
-                            >
-                                <ArrowLeft className="w-4 h-4" />
-                                <span className="hidden sm:inline">{prev.name}</span>
-                                <span className="sm:hidden">Previous</span>
-                            </Link>
-                        ) : (
-                            <div />
-                        )}
-                        <Link
-                            href={`/products/${product.categorySlug}`}
-                            className="text-cyan-400 hover:text-cyan-300 font-medium"
-                        >
-                            All {category?.name}
-                        </Link>
-                        {next ? (
-                            <Link
-                                href={`/products/${product.categorySlug}/${next.id}`}
-                                className="flex items-center gap-2 text-slate-400 hover:text-cyan-400 transition-colors"
-                            >
-                                <span className="hidden sm:inline">{next.name}</span>
-                                <span className="sm:hidden">Next</span>
-                                <ArrowRight className="w-4 h-4" />
-                            </Link>
-                        ) : (
-                            <div />
-                        )}
-                    </div>
-                </div>
-            </section>
-
-            <Footer />
-        </main>
-    );
+      <section className="product-detail-next"><div><span className="section-kicker"><span /> KEEP EXPLORING</span><h2>Find your next canvas.</h2></div><div className="product-detail-next-links">{prev && <Link href={`/products/${prev.categorySlug}/${prev.id}`}><ArrowLeft size={18} aria-hidden="true" /><span>PREVIOUS<br /><strong>{prev.name}</strong></span></Link>}{next && <Link href={`/products/${next.categorySlug}/${next.id}`}><span>NEXT<br /><strong>{next.name}</strong></span><ArrowRight size={18} aria-hidden="true" /></Link>}</div></section>
+      <Footer />
+    </main>
+  );
 }

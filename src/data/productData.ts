@@ -1,538 +1,129 @@
-// Centralized product data for MAS LED products
-
-export interface ProductSpec {
-    label: string;
-    value: string;
-}
-
-export interface ProductFeature {
-    title: string;
-    description: string;
-}
-
+// Technical figures and product names follow the client catalogue (pages 4–27).
+export interface ProductSpec { label: string; value: string }
+export interface ProductFeature { title: string; description: string }
 export interface Product {
-    id: string;
-    name: string;
-    series: string;
-    category: string;
-    categorySlug: string;
-    description: string;
-    tagline: string;
-    specs: ProductSpec[];
-    features: ProductFeature[];
-    applications: string[];
-    icon: string;
-    gradient: string;
-    bgColor: string;
-    images: string[];
+  id: string; name: string; series: string; category: string; categorySlug: string;
+  description: string; tagline: string; specs: ProductSpec[]; features: ProductFeature[];
+  applications: string[]; icon: string; gradient: string; bgColor: string; images: string[];
 }
-
 export interface Category {
-    id: string;
-    name: string;
-    slug: string;
-    description: string;
-    icon: string;
-    gradient: string;
-    bgColor: string;
-    borderColor: string;
+  id: string; name: string; slug: string; description: string; icon: string;
+  gradient: string; bgColor: string; borderColor: string;
 }
 
-// Categories matching the user's structure
 export const categories: Category[] = [
-    {
-        id: "indoor",
-        name: "Indoor LED Display",
-        slug: "indoor",
-        description: "High-resolution LED displays designed for indoor environments including retail, corporate, and entertainment venues.",
-        icon: "🏢",
-        gradient: "from-blue-500 to-blue-700",
-        bgColor: "bg-blue-500/10",
-        borderColor: "border-blue-500/30",
-    },
-    {
-        id: "outdoor",
-        name: "Outdoor LED Display",
-        slug: "outdoor",
-        description: "Weatherproof, high-brightness LED displays built for outdoor advertising, stadiums, and public spaces.",
-        icon: "🌤️",
-        gradient: "from-orange-400 to-orange-600",
-        bgColor: "bg-orange-500/10",
-        borderColor: "border-orange-500/30",
-    },
-    {
-        id: "rental",
-        name: "Rental LED Display",
-        slug: "rental",
-        description: "Portable, quick-assembly LED solutions ideal for events, concerts, exhibitions, and temporary installations.",
-        icon: "🎪",
-        gradient: "from-green-500 to-green-700",
-        bgColor: "bg-green-500/10",
-        borderColor: "border-green-500/30",
-    },
-    {
-        id: "transparent",
-        name: "Transparent LED Display",
-        slug: "transparent",
-        description: "See-through LED panels for glass facades, retail windows, and architectural media installations.",
-        icon: "✨",
-        gradient: "from-purple-500 to-purple-700",
-        bgColor: "bg-purple-500/10",
-        borderColor: "border-purple-500/30",
-    },
-    {
-        id: "standee",
-        name: "LED Display Standee",
-        slug: "standee",
-        description: "Freestanding LED poster displays for retail, exhibitions, and point-of-sale advertising.",
-        icon: "📺",
-        gradient: "from-yellow-500 to-amber-600",
-        bgColor: "bg-yellow-500/10",
-        borderColor: "border-yellow-500/30",
-    },
+  { id: "indoor", name: "Indoor LED Displays", slug: "indoor", description: "Wall-mounted, fine-pitch and flexible LED systems for interior spaces.", icon: "▦", gradient: "from-sky-400 to-blue-600", bgColor: "bg-sky-500/10", borderColor: "border-sky-500/30" },
+  { id: "outdoor", name: "Outdoor LED Displays", slug: "outdoor", description: "Weather-ready displays for buildings, billboards and public spaces.", icon: "◫", gradient: "from-blue-500 to-indigo-600", bgColor: "bg-blue-500/10", borderColor: "border-blue-500/30" },
+  { id: "rental", name: "Rental LED Displays", slug: "rental", description: "Fast-assembly displays for indoor and outdoor events.", icon: "▤", gradient: "from-cyan-400 to-sky-600", bgColor: "bg-cyan-500/10", borderColor: "border-cyan-500/30" },
+  { id: "transparent", name: "Transparent LED Displays", slug: "transparent", description: "See-through LED installations for glass and retail environments.", icon: "◇", gradient: "from-sky-400 to-teal-500", bgColor: "bg-teal-500/10", borderColor: "border-teal-500/30" },
+  { id: "standee", name: "LED Standee Displays", slug: "standee", description: "Freestanding LED posters for campaigns and customer-facing spaces.", icon: "▯", gradient: "from-blue-400 to-cyan-500", bgColor: "bg-blue-500/10", borderColor: "border-blue-500/30" },
+  { id: "digital-signage", name: "Digital Signage Kiosks", slug: "digital-signage", description: "Networked Full HD LCD kiosks for information and promotions.", icon: "▣", gradient: "from-teal-400 to-blue-600", bgColor: "bg-teal-500/10", borderColor: "border-teal-500/30" },
 ];
 
-// All products organized by category
+type Seed = Omit<Product, "category" | "gradient" | "bgColor" | "specs" | "features" | "images"> & {
+  specs: Record<string, string>; features: Array<[string, string]>; images: [string, string];
+};
+function makeProduct(seed: Seed): Product {
+  const category = categories.find((item) => item.slug === seed.categorySlug)!;
+  return {
+    ...seed, category: category.name, gradient: category.gradient, bgColor: category.bgColor,
+    specs: Object.entries(seed.specs).map(([label, value]) => ({ label, value })),
+    features: seed.features.map(([title, description]) => ({ title, description })),
+  };
+}
+
 export const products: Product[] = [
-    // Indoor LED Display Products
-    {
-        id: "infinity",
-        name: "MAS-Infinity Series",
-        series: "Premium Fine Pitch Indoor LED",
-        category: "Indoor LED Display",
-        categorySlug: "indoor",
-        description: "Ultra-fine pixel pitch LED displays delivering exceptional image quality for control rooms, boardrooms, and premium indoor applications.",
-        tagline: "Infinite Clarity, Limitless Possibilities",
-        icon: "💎",
-        gradient: "from-blue-400 to-blue-600",
-        bgColor: "bg-blue-500/10",
-        images: ["/MasBoard.png", "/MasBoard_1.png"],
-        specs: [
-            { label: "Pixel Pitch", value: "P0.9 - P1.5" },
-            { label: "Brightness", value: "≥800 nits" },
-            { label: "Refresh Rate", value: "3840Hz" },
-            { label: "Contrast", value: "10000:1" },
-            { label: "Viewing Angle", value: "160°/160°" },
-            { label: "Cabinet Size", value: "600×337.5mm" },
-        ],
-        features: [
-            { title: "Ultra Fine Pitch", description: "Pixel pitch as low as P0.9 for crystal-clear visuals at close viewing distances." },
-            { title: "HDR Support", description: "High Dynamic Range content support for vibrant, lifelike colors." },
-            { title: "Front Serviceability", description: "Easy front maintenance design reduces installation space requirements." },
-            { title: "Low Power Consumption", description: "Energy-efficient design with common cathode technology." },
-            { title: "Seamless Splicing", description: "Ultra-narrow bezels for virtually seamless large-format displays." },
-            { title: "Wide Color Gamut", description: "Covers 110% NTSC for accurate color reproduction." },
-        ],
-        applications: [
-            "Control Rooms",
-            "Corporate Boardrooms",
-            "Broadcast Studios",
-            "Command Centers",
-            "Premium Retail",
-            "Museums & Galleries",
-        ],
-    },
-    {
-        id: "hd-pro",
-        name: "MAS-HD Pro Series",
-        series: "Commercial Indoor LED Display",
-        category: "Indoor LED Display",
-        categorySlug: "indoor",
-        description: "Professional-grade indoor LED displays optimized for commercial installations with excellent price-performance ratio.",
-        tagline: "Professional Quality, Commercial Value",
-        icon: "📊",
-        gradient: "from-blue-500 to-cyan-600",
-        bgColor: "bg-cyan-500/10",
-        images: ["/MasBoard.png", "/MasBoard_1.png"],
-        specs: [
-            { label: "Pixel Pitch", value: "P1.5 - P2.5" },
-            { label: "Brightness", value: "≥1000 nits" },
-            { label: "Refresh Rate", value: "1920Hz" },
-            { label: "Contrast", value: "5000:1" },
-            { label: "Viewing Angle", value: "140°/140°" },
-            { label: "Cabinet Size", value: "640×480mm" },
-        ],
-        features: [
-            { title: "Commercial Grade", description: "Designed for 24/7 commercial operation with high reliability." },
-            { title: "Easy Installation", description: "Modular design enables quick installation and maintenance." },
-            { title: "Auto Brightness", description: "Ambient light sensor for automatic brightness adjustment." },
-            { title: "Wide Compatibility", description: "Works with various input sources including HDMI, DVI, SDI." },
-            { title: "Lightweight Design", description: "Slim cabinet design reduces structural load requirements." },
-            { title: "Smart Control", description: "Cloud-based remote management and monitoring." },
-        ],
-        applications: [
-            "Shopping Malls",
-            "Hotel Lobbies",
-            "Conference Rooms",
-            "Retail Stores",
-            "Airports",
-            "Corporate Offices",
-        ],
-    },
-    {
-        id: "cob",
-        name: "MAS-COB Series",
-        series: "Chip-on-Board LED Technology",
-        category: "Indoor LED Display",
-        categorySlug: "indoor",
-        description: "Next-generation COB LED technology offering superior protection, durability, and image quality for demanding environments.",
-        tagline: "Next-Gen COB Technology",
-        icon: "🔬",
-        gradient: "from-violet-500 to-purple-600",
-        bgColor: "bg-violet-500/10",
-        images: ["/MasXCOB.png", "/MasXCOB_1.png"],
-        specs: [
-            { label: "Pixel Pitch", value: "P0.6 - P1.2" },
-            { label: "Brightness", value: "≥600 nits" },
-            { label: "Refresh Rate", value: "7680Hz" },
-            { label: "Contrast", value: "20000:1" },
-            { label: "Protection", value: "IP30 Front" },
-            { label: "MTBF", value: ">100,000 hrs" },
-        ],
-        features: [
-            { title: "COB Technology", description: "Chip-on-Board packaging for enhanced durability and reliability." },
-            { title: "Anti-Collision", description: "Robust surface withstands impacts without LED damage." },
-            { title: "No Moiré Effect", description: "Optical design eliminates moiré patterns in camera capture." },
-            { title: "Wide Viewing Angle", description: "180° viewing angle with consistent color at all angles." },
-            { title: "Touch Resistant", description: "Protected surface suitable for interactive applications." },
-            { title: "Extended Lifespan", description: "Superior heat dissipation extends LED lifetime." },
-        ],
-        applications: [
-            "Broadcast Studios",
-            "Virtual Production",
-            "Control Centers",
-            "Premium Conference Rooms",
-            "Medical Imaging",
-            "Simulation Centers",
-        ],
-    },
-    {
-        id: "bendex",
-        name: "MAS-Bendex Series",
-        series: "Flexible Curved Indoor LED",
-        category: "Indoor LED Display",
-        categorySlug: "indoor",
-        description: "Flexible LED modules enabling creative curved and irregular shaped displays for unique architectural installations.",
-        tagline: "Bend the Rules of Display",
-        icon: "🌀",
-        gradient: "from-pink-500 to-rose-600",
-        bgColor: "bg-pink-500/10",
-        images: ["/MasFlex.png", "/MasFlex-1.png"],
-        specs: [
-            { label: "Pixel Pitch", value: "P1.8 - P3.0" },
-            { label: "Brightness", value: "≥1200 nits" },
-            { label: "Bend Radius", value: "≥500mm" },
-            { label: "Weight", value: "<8kg/m²" },
-            { label: "Flexibility", value: "Concave/Convex" },
-            { label: "Cabinet", value: "Soft Module" },
-        ],
-        features: [
-            { title: "Flexible Modules", description: "Soft PCB design allows bending for curved installations." },
-            { title: "Custom Shapes", description: "Create cylinders, waves, and irregular display shapes." },
-            { title: "Lightweight", description: "Ultra-light design for easy installation on various surfaces." },
-            { title: "Magnetic Assembly", description: "Quick magnetic mounting system for fast setup." },
-            { title: "Uniform Curvature", description: "Consistent image quality across curved surfaces." },
-            { title: "Indoor Rated", description: "Designed for interior architectural applications." },
-        ],
-        applications: [
-            "Curved Video Walls",
-            "Cylindrical Displays",
-            "Exhibition Booths",
-            "Retail Installations",
-            "Architectural Features",
-            "Stage Design",
-        ],
-    },
-
-    // Outdoor LED Display Products
-    {
-        id: "ox",
-        name: "MAS-OX Series",
-        series: "High Brightness Outdoor LED",
-        category: "Outdoor LED Display",
-        categorySlug: "outdoor",
-        description: "High-brightness outdoor LED displays designed for maximum visibility in direct sunlight, ideal for billboards and large-format advertising.",
-        tagline: "Outdoor Excellence, Maximum Impact",
-        icon: "☀️",
-        gradient: "from-orange-500 to-red-600",
-        bgColor: "bg-orange-500/10",
-        images: ["/MasWall.png", "/MasWall_1.png"],
-        specs: [
-            { label: "Pixel Pitch", value: "P4 - P10" },
-            { label: "Brightness", value: "≥8000 nits" },
-            { label: "Refresh Rate", value: "3840Hz" },
-            { label: "IP Rating", value: "IP65/IP54" },
-            { label: "Temperature", value: "-40°C to 50°C" },
-            { label: "Viewing Distance", value: "5m - 100m" },
-        ],
-        features: [
-            { title: "High Brightness", description: "8000+ nits ensures visibility even in direct sunlight." },
-            { title: "Weatherproof", description: "IP65 rated front and IP54 rear for all-weather operation." },
-            { title: "Wide Temperature", description: "Operates reliably from -40°C to 50°C." },
-            { title: "Energy Saving", description: "Smart power management reduces electricity costs." },
-            { title: "Easy Maintenance", description: "Front and rear accessible module design." },
-            { title: "Anti-UV", description: "UV-resistant materials prevent color fading." },
-        ],
-        applications: [
-            "Highway Billboards",
-            "Building Facades",
-            "Stadium Displays",
-            "Outdoor Advertising",
-            "Transportation Hubs",
-            "Public Squares",
-        ],
-    },
-    {
-        id: "storm",
-        name: "MAS-Storm Series",
-        series: "Rugged All-Weather Outdoor LED",
-        category: "Outdoor LED Display",
-        categorySlug: "outdoor",
-        description: "Heavy-duty outdoor LED displays engineered for extreme weather conditions and harsh environments.",
-        tagline: "Built to Weather Any Storm",
-        icon: "⛈️",
-        gradient: "from-slate-600 to-slate-800",
-        bgColor: "bg-slate-500/10",
-        images: ["/MasVision.png", "/MasVision_1.png"],
-        specs: [
-            { label: "Pixel Pitch", value: "P3.9 - P8" },
-            { label: "Brightness", value: "≥6500 nits" },
-            { label: "IP Rating", value: "IP68/IP65" },
-            { label: "Wind Load", value: "120 km/h" },
-            { label: "Humidity", value: "10%-95% RH" },
-            { label: "Salt Spray", value: "1000hrs" },
-        ],
-        features: [
-            { title: "IP68 Protection", description: "Fully waterproof and dustproof for extreme conditions." },
-            { title: "Corrosion Resistant", description: "Salt spray tested for coastal installations." },
-            { title: "High Wind Resistance", description: "Engineered to withstand winds up to 120 km/h." },
-            { title: "Lightning Protection", description: "Built-in surge protection against lightning strikes." },
-            { title: "Smart Cooling", description: "Intelligent thermal management system." },
-            { title: "Remote Diagnostics", description: "Real-time monitoring and fault detection." },
-        ],
-        applications: [
-            "Coastal Installations",
-            "Industrial Areas",
-            "Marine Environments",
-            "Extreme Climates",
-            "Sports Stadiums",
-            "Mining Sites",
-        ],
-    },
-    {
-        id: "flexedge",
-        name: "MAS-FlexEdge Series",
-        series: "Slim Outdoor LED Display",
-        category: "Outdoor LED Display",
-        categorySlug: "outdoor",
-        description: "Slim-profile outdoor LED displays combining elegant design with robust outdoor performance for modern architectural integration.",
-        tagline: "Elegant Outdoor Solutions",
-        icon: "🏙️",
-        gradient: "from-teal-500 to-emerald-600",
-        bgColor: "bg-teal-500/10",
-        images: ["/MasOptiView.png", "/MasOptiView_1.png"],
-        specs: [
-            { label: "Pixel Pitch", value: "P2.5 - P6" },
-            { label: "Brightness", value: "≥5500 nits" },
-            { label: "Cabinet Depth", value: "75mm" },
-            { label: "IP Rating", value: "IP65/IP54" },
-            { label: "Weight", value: "<28kg/panel" },
-            { label: "Power", value: "<350W/m²" },
-        ],
-        features: [
-            { title: "Ultra Slim", description: "Only 75mm depth for sleek architectural integration." },
-            { title: "Lightweight", description: "Reduced weight minimizes structural requirements." },
-            { title: "Quick Lock", description: "Tool-free panel installation and removal." },
-            { title: "Energy Efficient", description: "Low power consumption for reduced operating costs." },
-            { title: "Quiet Operation", description: "Fanless cooling design for noise-sensitive areas." },
-            { title: "Wide Format", description: "Available in various aspect ratios." },
-        ],
-        applications: [
-            "Building Wraps",
-            "Retail Storefronts",
-            "Transit Shelters",
-            "Urban Furniture",
-            "Parking Structures",
-            "Shopping Centers",
-        ],
-    },
-
-    // Rental LED Display Products
-    {
-        id: "rx-indoor",
-        name: "MAS-RX Series Indoor",
-        series: "Quick-Setup Rental LED",
-        category: "Rental LED Display",
-        categorySlug: "rental",
-        description: "Fast-deploying indoor rental LED displays designed for events, concerts, and temporary installations with minimal setup time.",
-        tagline: "Setup Fast, Impress Faster",
-        icon: "🎭",
-        gradient: "from-green-500 to-emerald-600",
-        bgColor: "bg-green-500/10",
-        images: ["/MasTouch.png", "/MasTouch_1.png"],
-        specs: [
-            { label: "Pixel Pitch", value: "P2.6 - P3.9" },
-            { label: "Brightness", value: "≥1200 nits" },
-            { label: "Cabinet Size", value: "500×500mm" },
-            { label: "Weight", value: "7.5kg/panel" },
-            { label: "Setup Time", value: "<30 sec/panel" },
-            { label: "Curve", value: "±10°" },
-        ],
-        features: [
-            { title: "Quick Lock System", description: "Patent quick-lock mechanism for 30-second panel connection." },
-            { title: "Lightweight Magnesium", description: "Die-cast magnesium alloy cabinet for easy handling." },
-            { title: "Curve Capable", description: "Supports concave and convex curved configurations." },
-            { title: "Hot Swappable", description: "Replace modules on-the-fly without powering down." },
-            { title: "Hanging & Stacking", description: "Versatile rigging options for any venue." },
-            { title: "Flight Case Ready", description: "Designed for standard flight case packaging." },
-        ],
-        applications: [
-            "Concerts & Tours",
-            "Corporate Events",
-            "Trade Shows",
-            "Award Ceremonies",
-            "Fashion Shows",
-            "Live Productions",
-        ],
-    },
-    {
-        id: "eventsmax",
-        name: "MAS-EventsMax Series",
-        series: "Outdoor Rental LED",
-        category: "Rental LED Display",
-        categorySlug: "rental",
-        description: "Rugged outdoor rental LED displays built for festivals, sports events, and large-scale outdoor gatherings.",
-        tagline: "Maximum Impact at Any Event",
-        icon: "🎪",
-        gradient: "from-lime-500 to-green-600",
-        bgColor: "bg-lime-500/10",
-        images: ["/MasTouch.png", "/MasTouch_1.png"],
-        specs: [
-            { label: "Pixel Pitch", value: "P3.9 - P5.9" },
-            { label: "Brightness", value: "≥5500 nits" },
-            { label: "IP Rating", value: "IP65" },
-            { label: "Cabinet Size", value: "500×1000mm" },
-            { label: "Weight", value: "14kg/panel" },
-            { label: "Wind Load", value: "80 km/h" },
-        ],
-        features: [
-            { title: "Outdoor Ready", description: "IP65 rated for rain, dust, and outdoor conditions." },
-            { title: "High Brightness", description: "5500+ nits for daylight visibility." },
-            { title: "Rapid Assembly", description: "Ground support and hanging systems included." },
-            { title: "Transport Optimized", description: "Dolly and flight case solutions available." },
-            { title: "Power Efficient", description: "Dual power supply with auto-switching." },
-            { title: "Easy Maintenance", description: "Tool-free module replacement on-site." },
-        ],
-        applications: [
-            "Music Festivals",
-            "Sports Events",
-            "Outdoor Concerts",
-            "Public Celebrations",
-            "Political Rallies",
-            "Outdoor Cinema",
-        ],
-    },
-
-    // Transparent LED Display Products
-    {
-        id: "transglow",
-        name: "MAS-TransGlow Series",
-        series: "See-Through LED Display",
-        category: "Transparent LED Display",
-        categorySlug: "transparent",
-        description: "High-transparency LED displays that blend digital content with physical environments for stunning glass facade applications.",
-        tagline: "See Through, Stand Out",
-        icon: "🪟",
-        gradient: "from-purple-400 to-violet-600",
-        bgColor: "bg-purple-500/10",
-        images: ["/MasAir.png", "/MasAir_1.png"],
-        specs: [
-            { label: "Pixel Pitch", value: "P3.9 - P10" },
-            { label: "Transparency", value: "≥85%" },
-            { label: "Brightness", value: "≥5500 nits" },
-            { label: "Weight", value: "<12kg/m²" },
-            { label: "IP Rating", value: "IP43" },
-            { label: "Thickness", value: "<15mm" },
-        ],
-        features: [
-            { title: "High Transparency", description: "Up to 85% transparency maintains natural lighting." },
-            { title: "Ultra Lightweight", description: "Less than 12kg/m² reduces structural load." },
-            { title: "Invisible from Inside", description: "LED strips are nearly invisible from interior view." },
-            { title: "Easy Retrofit", description: "Installs on existing glass without structural changes." },
-            { title: "Energy Saving", description: "Natural daylight reduces lighting costs." },
-            { title: "Creative Freedom", description: "Custom sizes and shapes available." },
-        ],
-        applications: [
-            "Glass Facades",
-            "Retail Windows",
-            "Shopping Malls",
-            "Auto Showrooms",
-            "Airports & Stations",
-            "Office Buildings",
-        ],
-    },
-
-    // LED Display Standee Products
-    {
-        id: "standpro",
-        name: "MAS-StandPro Series",
-        series: "Freestanding LED Poster",
-        category: "LED Display Standee",
-        categorySlug: "standee",
-        description: "Elegant freestanding LED poster displays for retail, exhibitions, and point-of-sale advertising with plug-and-play simplicity.",
-        tagline: "Stand Alone, Stand Out",
-        icon: "🎯",
-        gradient: "from-amber-400 to-orange-500",
-        bgColor: "bg-amber-500/10",
-        images: ["/MasOptiView.png", "/MasOptiView_1.png"],
-        specs: [
-            { label: "Pixel Pitch", value: "P1.8 - P2.5" },
-            { label: "Screen Sizes", value: "43\" / 55\" / 65\"" },
-            { label: "Brightness", value: "≥1000 nits" },
-            { label: "Thickness", value: "<35mm" },
-            { label: "Storage", value: "8GB Built-in" },
-            { label: "Connectivity", value: "WiFi/LAN/USB" },
-        ],
-        features: [
-            { title: "Plug & Play", description: "Simple setup with built-in media player." },
-            { title: "Ultra Slim", description: "Sleek design less than 35mm thick." },
-            { title: "Cloud Managed", description: "Remote content management via web portal." },
-            { title: "Movable Design", description: "Casters included for easy repositioning." },
-            { title: "Anti-Glare Screen", description: "Clear visibility from any angle." },
-            { title: "Multi-Format", description: "Supports images, video, and web content." },
-        ],
-        applications: [
-            "Retail Stores",
-            "Exhibition Booths",
-            "Hotel Lobbies",
-            "Restaurant Menus",
-            "Real Estate Displays",
-            "Showrooms",
-        ],
-    },
+  makeProduct({
+    id: "bendex", name: "MAS-BendX Series", series: "Flexible indoor LED", categorySlug: "indoor", icon: "◠",
+    description: "Soft LED modules for concave, convex, wave and cylindrical installations in premium interior spaces.", tagline: "Shape the space around the screen.", images: ["/catalogue/bendx-main.jpg", "/catalogue/bendx-detail.jpg"],
+    specs: { "Pixel Pitch": "P1.53 / P1.86 / P2.5 / P3.07", Brightness: ">600–1,000 nits (by pitch)", "Cabinet Size": "640 × 480 mm", "Cabinet Weight": "Approx. 5.5 kg", Protection: "IP32", "Refresh Rate": "Up to 3,840–4,200 Hz (by pitch)" },
+    features: [["Shape-friendly modules", "Soft modules support curves and custom forms."], ["Front access", "Magnetic front service simplifies maintenance."], ["Indoor clarity", "Fine pitch options suit close-viewing installations."]],
+    applications: ["Retail interiors", "Galleries", "Corporate experience centres", "Hotels and lobbies", "Trade shows"],
+  }),
+  makeProduct({
+    id: "hd-pro", name: "MAS-HD Pro Series", series: "Indoor LED display", categorySlug: "indoor", icon: "▦",
+    description: "Slim modular LED panels for boardrooms, retail environments and indoor signage.", tagline: "Precision for every interior.", images: ["/catalogue/hd-pro-main.jpg", "/catalogue/hd-pro-detail.jpg"],
+    specs: { "Pixel Pitch": "P1.25 / P1.53 / P1.86 / P2.5", Brightness: ">600–800 nits (by pitch)", "Cabinet Size": "640 × 480 mm", "Cabinet Weight": "Approx. 5.5 kg", Protection: "IP32", Service: "Front access" },
+    features: [["Fine pixel pitch", "Four choices for different viewing distances."], ["Slim panels", "Lightweight cabinets ease interior mounting."], ["Seamless assemblies", "Modular construction supports larger canvases."]],
+    applications: ["Boardrooms", "Retail stores", "Showrooms", "Control rooms", "Education"],
+  }),
+  makeProduct({
+    id: "infinity", name: "MAS-Infinity Series", series: "Indoor wall-mount LED", categorySlug: "indoor", icon: "▥",
+    description: "Custom-sized indoor LED walls for fixed installations and vivid large-format communication.", tagline: "A wall without limits.", images: ["/catalogue/infinity-main.jpg", "/catalogue/infinity-detail.jpg"],
+    specs: { "Pixel Pitch": "P2.5 / P3.07 / P4", Brightness: ">800–1,200 nits (by pitch)", Installation: "Fixed wall mount", "Refresh Rate": "Up to 3,840 Hz", Protection: "IP32", Service: "Front access" },
+    features: [["Custom dimensions", "Built to suit the wall and viewing distance."], ["Front service", "Access modules without rear clearance."], ["Seamless display", "Modules join into one continuous visual surface."]],
+    applications: ["Corporate offices", "Shopping malls", "Hotels", "Airports", "Studios"],
+  }),
+  makeProduct({
+    id: "ox", name: "MAS-OX Series", series: "Outdoor LED display", categorySlug: "outdoor", icon: "▨",
+    description: "Modular high-visibility LED cabinets for billboards, façades, stadiums and public information.", tagline: "Make the city your canvas.", images: ["/catalogue/ox-main.jpg", "/catalogue/ox-detail.jpg"],
+    specs: { "Pixel Pitch": "P4 / P6 / P8 / P10", Brightness: ">4,500–6,000 nits (by pitch)", "IP Rating": "IP65", "Cabinet Size": "960 × 960 mm", "Refresh Rate": "3,840 Hz", Service: "Rear access" },
+    features: [["Daylight visibility", "Brightness options are matched to viewing distance."], ["Outdoor protection", "IP65-rated cabinets suit exposed installations."], ["Modular size", "Cabinets combine for project-scale screens."]],
+    applications: ["Billboards", "Commercial façades", "Stadiums", "Highways", "Public squares"],
+  }),
+  makeProduct({
+    id: "storm", name: "MAS-STROM Series", series: "Outdoor LED display", categorySlug: "outdoor", icon: "▨",
+    description: "Rugged magnesium die-cast outdoor cabinets for large, long-running installations.", tagline: "Engineered for the elements.", images: ["/catalogue/strom-main.jpg", "/catalogue/strom-detail.jpg"],
+    specs: { "Pixel Pitch": "P2.5 / P3.07 / P4 / P5 / P6.67", Brightness: ">4,500–6,000 nits (by pitch)", "IP Rating": "IP65", "Cabinet Size": "960 × 960 mm", "Refresh Rate": "3,840 Hz", "Cabinet Weight": "Approx. 25 kg" },
+    features: [["Rugged cabinet", "Die-cast structure for permanent outdoor screens."], ["IP65 protection", "Built for rain and dust exposure."], ["Multiple pitches", "Select the pitch to suit viewing distance."]],
+    applications: ["Highways", "Stadiums", "Building façades", "Transit hubs", "Outdoor events"],
+  }),
+  makeProduct({
+    id: "flexedge", name: "MAS-FlexEdge Series", series: "Curved outdoor LED", categorySlug: "outdoor", icon: "⌁",
+    description: "Outdoor LED cabinets that join around corners and curves for architectural display surfaces.", tagline: "Go beyond a flat screen.", images: ["/catalogue/flexedge-main.jpg", "/catalogue/flexedge-detail.jpg"],
+    specs: { "Pixel Pitch": "P2.5 / P3.07 / P4 / P6", Brightness: ">4,500–5,500 nits (by pitch)", "IP Rating": "IP65", "Cabinet Size": "960 × 960 mm", Curve: "Approx. −10° to +15° per panel", "Refresh Rate": "3,840 Hz" },
+    features: [["Curved joining", "Cabinets follow corners and shaped surfaces."], ["Outdoor ready", "IP65-rated display construction."], ["Custom radius", "Configurations can suit the architecture."]],
+    applications: ["Building façades", "Mall exteriors", "Stadium wraps", "Brand walls", "Architectural installations"],
+  }),
+  makeProduct({
+    id: "rx-indoor", name: "MAS-RX Series Indoor", series: "Indoor rental LED", categorySlug: "rental", icon: "▤",
+    description: "Quick-lock LED cabinets for indoor stages, exhibitions and temporary large-format screens.", tagline: "Build the moment faster.", images: ["/catalogue/rx-indoor-main.jpg", "/catalogue/rx-indoor-detail.jpg"],
+    specs: { "Pixel Pitch": "P2.976 / P3.91", Brightness: ">800 / >1,000 nits (by pitch)", "Cabinet Size": "500 × 500 mm", "Cabinet Weight": "Approx. 6.8 kg", "IP Rating": "IP32", "Refresh Rate": "3,840 Hz" },
+    features: [["Quick-lock assembly", "Cabinets join for fast event setup."], ["Portable cabinet", "The 500 mm format suits transport and reuse."], ["Front or rear service", "Flexible access for temporary installations."]],
+    applications: ["Stage backdrops", "Concerts", "Exhibitions", "Weddings", "TV studios"],
+  }),
+  makeProduct({
+    id: "eventsmax", name: "MAS-Eventmax Series", series: "Outdoor event LED", categorySlug: "rental", icon: "▤",
+    description: "Outdoor-ready modular panels for events, public campaigns and temporary billboards.", tagline: "Scale the spectacle.", images: ["/catalogue/eventmax-main.jpg", "/catalogue/eventmax-detail.jpg"],
+    specs: { "Pixel Pitch": "P3.84 / P4.8 / P6", Brightness: ">4,500–5,500 nits (by pitch)", "Cabinet Size": "576 × 576 mm", "Cabinet Weight": "Approx. 9.3–9.5 kg", "IP Rating": "IP65", "Refresh Rate": "Up to 3,840 Hz" },
+    features: [["Outdoor events", "High-brightness options for open-air venues."], ["Curve locking", "Panels can form event-friendly shapes."], ["Aluminium cabinet", "Portable construction for repeated setup."]],
+    applications: ["Concerts", "Outdoor events", "Weddings", "Brand activations", "Temporary billboards"],
+  }),
+  makeProduct({
+    id: "rx-outdoor", name: "MAS-RX Series Outdoor", series: "Outdoor rental LED", categorySlug: "rental", icon: "▤",
+    description: "Compact outdoor rental panels for concerts, festivals and fast-paced event production.", tagline: "Ready when the stage is.", images: ["/catalogue/rx-outdoor-main.jpg", "/catalogue/rx-outdoor-detail.jpg"],
+    specs: { "Pixel Pitch": "P2.976 / P3.91 / P4.81", Brightness: ">3,500–4,500 nits (by pitch)", "Cabinet Size": "500 × 500 mm", "Cabinet Weight": "Approx. 6.8 kg", "IP Rating": "IP65", "Refresh Rate": "3,840 Hz" },
+    features: [["Fast assembly", "Quick-lock cabinets streamline event builds."], ["Weather-ready", "IP65 construction for outdoor stages."], ["Three pitch options", "Choose for the venue and audience distance."]],
+    applications: ["Outdoor concerts", "Festivals", "Sports events", "Roadshows", "Public gatherings"],
+  }),
+  makeProduct({
+    id: "transglow", name: "MAS Trans-Glow Series", series: "Transparent LED display", categorySlug: "transparent", icon: "◇",
+    description: "Transparent LED panels that layer moving content over glass while preserving views through the installation.", tagline: "Let the architecture show through.", images: ["/catalogue/trans-glow-main.jpg", "/catalogue/trans-glow-detail.jpg"],
+    specs: { "Pixel Pitch": "P3.91–P7.8", Brightness: "3,500–4,500 nits", Transparency: "Up to 75–85%", "Cabinet Size": "500 × 1,000 / 1,000 × 1,000 mm", "IP Rating": "IP43 (indoor)", "Refresh Rate": "3,840 Hz" },
+    features: [["See-through display", "Digital content can coexist with the view behind."], ["Glass integration", "Lightweight rails support window and façade concepts."], ["Modular layout", "Cabinets combine for custom areas."]],
+    applications: ["Retail windows", "Glass showrooms", "Shopping malls", "Office glass walls", "Exhibition spaces"],
+  }),
+  makeProduct({
+    id: "standpro", name: "MAS-StandPro Series LED", series: "Freestanding LED standee", categorySlug: "standee", icon: "▯",
+    description: "A freestanding portrait LED display for retail messaging, promotions and events.", tagline: "A display that stands on its own.", images: ["/catalogue/standpro-main.jpg", "/catalogue/standpro-detail.jpg"],
+    specs: { "Pixel Pitch": "P1.53 / P1.86 / P2.5", Brightness: ">600–800 nits (by pitch)", "Screen Size": "640 × 1,920 mm", "Cabinet Weight": "Approx. 35 kg", "IP Rating": "IP43", Service: "Front access" },
+    features: [["All-in-one format", "Portrait LED presentation in a standalone frame."], ["Easy content input", "HDMI, LAN, Wi-Fi, cloud and USB are listed in the catalogue."], ["Moveable presence", "Designed for spaces where campaign content changes."]],
+    applications: ["Hotel lobbies", "Product launches", "Retail promotions", "Exhibitions", "Airport lounges"],
+  }),
+  makeProduct({
+    id: "signage-kiosk", name: "MAS Signage Kiosk", series: "Full HD network digital signage", categorySlug: "digital-signage", icon: "▣",
+    description: "Networked Full HD LCD floor kiosks for information, promotions and customer-facing media.", tagline: "Information with presence.", images: ["/catalogue/kiosk-main.jpg", "/catalogue/kiosk-detail.jpg"],
+    specs: { "Display Type": "Full HD LCD signage kiosk", "Screen Sizes": "43 / 50 / 55 / 65 in", Resolution: "1,920 × 1,080", Brightness: "300–400 cd/m² (by size)", Connectivity: "Ethernet / Wi-Fi", Installation: "Floor standing" },
+    features: [["Networked playback", "Publish multimedia information to the display."], ["Four sizes", "43, 50, 55 and 65-inch options."], ["Floor-standing format", "A slim kiosk for public and commercial interiors."]],
+    applications: ["Retail", "Hospitality", "Information points", "Corporate lobbies", "Exhibitions"],
+  }),
 ];
 
-// Helper functions
-export function getProductsByCategory(categorySlug: string): Product[] {
-    return products.filter((p) => p.categorySlug === categorySlug);
-}
-
-export function getProductById(productId: string): Product | undefined {
-    return products.find((p) => p.id === productId);
-}
-
-export function getCategoryBySlug(slug: string): Category | undefined {
-    return categories.find((c) => c.slug === slug);
-}
-
-export function getProductNavigation(product: Product): {
-    prev: Product | undefined;
-    next: Product | undefined;
-} {
-    const categoryProducts = getProductsByCategory(product.categorySlug);
-    const currentIndex = categoryProducts.findIndex((p) => p.id === product.id);
-    return {
-        prev: currentIndex > 0 ? categoryProducts[currentIndex - 1] : undefined,
-        next: currentIndex < categoryProducts.length - 1 ? categoryProducts[currentIndex + 1] : undefined,
-    };
+export function getProductsByCategory(categorySlug: string): Product[] { return products.filter((product) => product.categorySlug === categorySlug); }
+export function getProductById(productId: string): Product | undefined { return products.find((product) => product.id === productId); }
+export function getCategoryBySlug(slug: string): Category | undefined { return categories.find((category) => category.slug === slug); }
+export function getProductNavigation(product: Product): { prev: Product | undefined; next: Product | undefined } {
+  const categoryProducts = getProductsByCategory(product.categorySlug);
+  const index = categoryProducts.findIndex((item) => item.id === product.id);
+  return { prev: index > 0 ? categoryProducts[index - 1] : undefined, next: index < categoryProducts.length - 1 ? categoryProducts[index + 1] : undefined };
 }

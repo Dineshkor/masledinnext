@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
     title: "About Us - MAS LED Company",
-    description: "Learn about MAS LED - India's trusted LED display manufacturer with 10+ years experience, 500+ projects, serving 50+ cities. Quality LED solutions with 24/7 support.",
+    description: "Explore MAS LED display systems for indoor, outdoor, rental, transparent and digital signage projects.",
     keywords: ["about MAS LED", "LED display company India", "LED manufacturer", "Greater Noida LED company", "LED display supplier"],
     openGraph: {
         title: "About Us - MAS LED Company",
-        description: "India's trusted LED display manufacturer with 10+ years experience and 500+ successful projects.",
+        description: "Discover the MAS LED catalogue and find a display format for your space.",
         type: "website",
     },
 };

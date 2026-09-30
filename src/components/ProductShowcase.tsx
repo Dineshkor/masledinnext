@@ -1,198 +1,42 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
+import Image from "next/image";
 import Link from "next/link";
-import { Monitor, Sun, Layers, Spline, TouchpadIcon, Eye, Tv, ArrowRight } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import useReducedMotion from "@/hooks/useMotionPreference";
+import { ArrowUpRight, Plus } from "lucide-react";
+import { categories, products, Product } from "@/data/productData";
+import MagneticLink from "./MagneticLink";
 
-interface Product {
-    id: string;
-    title: string;
-    subtitle: string;
-    description: string;
-    icon: React.ReactNode;
-    features: string[];
-    link: string;
+function ProductTile({ product, index, all }: { product: Product; index: number; all: boolean }) {
+  const reduced = useReducedMotion();
+  const size = all ? ([0, 5].includes(index) ? "tile-wide" : [10, 11].includes(index) ? "tile-half" : "") : "tile-half";
+  return <motion.article layout={!reduced} initial={reduced ? false : { opacity: 0, y: 45 }} whileInView={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: .97 }} viewport={{ once: true, margin: "-40px" }} transition={{ duration: .65, ease: [.22, 1, .36, 1] }} className={`product-tile ${size}`}>
+    <Link href={`/products/${product.categorySlug}/${product.id}`} className="product-tile-link" onPointerMove={(event) => {
+      if (reduced || event.pointerType !== "mouse") return;
+      const bounds = event.currentTarget.getBoundingClientRect();
+      const x = (event.clientX - bounds.left) / bounds.width;
+      const y = (event.clientY - bounds.top) / bounds.height;
+      event.currentTarget.style.setProperty("--pointer-x", `${x * 100}%`);
+      event.currentTarget.style.setProperty("--pointer-y", `${y * 100}%`);
+      event.currentTarget.style.setProperty("--tilt-x", `${(y - .5) * -5}deg`);
+      event.currentTarget.style.setProperty("--tilt-y", `${(x - .5) * 5}deg`);
+    }} onPointerLeave={(event) => { event.currentTarget.style.setProperty("--tilt-x", "0deg"); event.currentTarget.style.setProperty("--tilt-y", "0deg"); }}>
+      <div className="product-tile-image"><Image src={product.images[0]} alt={`${product.name} display installation`} fill sizes="(max-width: 700px) 100vw, (max-width: 1000px) 50vw, 60vw" /><div className="product-image-shade" /><span className="product-tile-index">/{String(index + 1).padStart(2, "0")}</span><span className="product-tile-plus"><Plus size={22} /></span><span className="product-hover-label">VIEW SERIES <ArrowUpRight size={17} /></span><div className="product-tile-title"><span>{product.series}</span><h3>{product.name.replace("MAS-", "").replace("MAS ", "").replace(" Series", "")}</h3></div></div>
+      <div className="product-tile-details"><div><span>{product.specs[0].label}</span><strong>{product.specs[0].value}</strong></div><ArrowUpRight size={24} aria-hidden="true" /></div>
+    </Link>
+  </motion.article>;
 }
 
-const products: Product[] = [
-    {
-        id: "infinity",
-        title: "MAS-Infinity Series",
-        subtitle: "Premium Fine Pitch Indoor LED",
-        description: "Ultra-fine pixel pitch LED displays delivering exceptional image quality for control rooms and boardrooms.",
-        icon: <Monitor className="w-8 h-8" />,
-        features: ["Indoor/Commercial", "P0.9 - P1.5", "Crystal Clear"],
-        link: "/products/indoor/infinity",
-    },
-    {
-        id: "ox",
-        title: "MAS-OX Series",
-        subtitle: "High Brightness Outdoor LED",
-        description: "High-brightness outdoor LED displays designed for maximum visibility in direct sunlight.",
-        icon: <Tv className="w-8 h-8" />,
-        features: ["8000+ nits", "IP65 Rated", "24/7 Operation"],
-        link: "/products/outdoor/ox",
-    },
-    {
-        id: "transglow",
-        title: "MAS-TransGlow Series",
-        subtitle: "Transparent LED Display",
-        description: "See-through LED panels that blend digital content with physical environments.",
-        icon: <Layers className="w-8 h-8" />,
-        features: ["85% Transparent", "Lightweight", "Glass Facades"],
-        link: "/products/transparent/transglow",
-    },
-    {
-        id: "bendex",
-        title: "MAS-Bendex Series",
-        subtitle: "Flexible Curved Indoor LED",
-        description: "Flexible LED modules enabling creative curved and irregular shaped displays.",
-        icon: <Spline className="w-8 h-8" />,
-        features: ["Curved Designs", "≥500mm Bend", "Modular"],
-        link: "/products/indoor/bendex",
-    },
-    {
-        id: "rx-indoor",
-        title: "MAS-RX Series Indoor",
-        subtitle: "Quick-Setup Rental LED",
-        description: "Fast-deploying indoor rental LED displays designed for events and concerts.",
-        icon: <TouchpadIcon className="w-8 h-8" />,
-        features: ["Events", "Quick Setup", "Lightweight"],
-        link: "/products/rental/rx-indoor",
-    },
-    {
-        id: "storm",
-        title: "MAS-Storm Series",
-        subtitle: "Rugged All-Weather Outdoor LED",
-        description: "Heavy-duty outdoor LED displays engineered for extreme weather conditions.",
-        icon: <Eye className="w-8 h-8" />,
-        features: ["IP68 Rated", "120 km/h Wind", "All-Weather"],
-        link: "/products/outdoor/storm",
-    },
-    {
-        id: "standpro",
-        title: "MAS-StandPro Series",
-        subtitle: "Freestanding LED Poster",
-        description: "Elegant freestanding LED poster displays for retail and exhibitions.",
-        icon: <Sun className="w-8 h-8" />,
-        features: ["Plug & Play", "Portable", "Cloud Managed"],
-        link: "/products/standee/standpro",
-    },
-];
-
 export default function ProductShowcase() {
-    const [hoveredId, setHoveredId] = useState<string | null>(null);
-
-    return (
-        <section id="products" className="py-24 relative">
-            <div className="max-w-7xl mx-auto px-6">
-                {/* Section Header */}
-                <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6 }}
-                    className="text-center mb-16"
-                >
-                    <span className="text-cyan-400 text-sm font-medium uppercase tracking-wider">
-                        Our Products
-                    </span>
-                    <h2 className="text-3xl md:text-5xl font-bold text-white mt-3 mb-4">
-                        The MAS LED Series
-                    </h2>
-                    <p className="text-slate-400 max-w-2xl mx-auto">
-                        Engineered for excellence, designed for impact. Explore our premium range of LED display solutions.
-                    </p>
-                </motion.div>
-
-                {/* Products Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {products.map((product, index) => (
-                        <motion.div
-                            key={product.id}
-                            initial={{ opacity: 0, y: 30 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.5, delay: index * 0.1 }}
-                            onMouseEnter={() => setHoveredId(product.id)}
-                            onMouseLeave={() => setHoveredId(null)}
-                            className={`
-                led-card relative rounded-2xl p-6 bg-slate-900/50 backdrop-blur-sm cursor-pointer
-                ${hoveredId === product.id ? "scale-[1.02]" : ""}
-                transition-all duration-300
-              `}
-                        >
-                            <Link href={product.link}>
-                                {/* Icon */}
-                                <div className={`
-                w-14 h-14 rounded-xl flex items-center justify-center mb-4
-                transition-all duration-300
-                ${hoveredId === product.id
-                                        ? "bg-gradient-to-br from-cyan-500 to-cyan-400 text-slate-950"
-                                        : "bg-slate-800 text-cyan-400"}`}>
-                                    {product.icon}
-                                </div>
-
-                                {/* Title & Subtitle */}
-                                <h3 className="text-xl font-bold text-white mb-1">{product.title}</h3>
-                                <p className="text-cyan-400 text-sm font-medium mb-3">{product.subtitle}</p>
-
-                                {/* Description - Revealed on hover */}
-                                <motion.div
-                                    initial={false}
-                                    animate={{
-                                        height: hoveredId === product.id ? "auto" : 0,
-                                        opacity: hoveredId === product.id ? 1 : 0,
-                                    }}
-                                    transition={{ duration: 0.3 }}
-                                    className="overflow-hidden"
-                                >
-                                    <p className="text-slate-400 text-sm mb-4">{product.description}</p>
-
-                                    {/* Features */}
-                                    <div className="flex flex-wrap gap-2 mb-4">
-                                        {product.features.map((feature) => (
-                                            <span
-                                                key={feature}
-                                                className="px-3 py-1 text-xs font-medium bg-cyan-400/10 text-cyan-400 rounded-full"
-                                            >
-                                                {feature}
-                                            </span>
-                                        ))}
-                                    </div>
-
-                                    {/* View Product Link */}
-                                    <div className="flex items-center gap-1 text-cyan-400 text-sm font-medium">
-                                        View Product <ArrowRight className="w-4 h-4" />
-                                    </div>
-                                </motion.div>
-
-                                {/* Hover indicator */}
-                                {hoveredId !== product.id && (
-                                    <p className="text-slate-500 text-sm mt-2">Hover to learn more →</p>
-                                )}
-                            </Link>
-                        </motion.div>
-                    ))}
-                </div>
-
-                {/* View All Products Button */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    className="text-center mt-12"
-                >
-                    <Link
-                        href="/products"
-                        className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-cyan-500 to-cyan-400 text-slate-950 font-bold rounded-xl hover:shadow-lg hover:shadow-cyan-500/30 transition-all"
-                    >
-                        View All Products
-                        <ArrowRight className="w-5 h-5" />
-                    </Link>
-                </motion.div>
-            </div>
-        </section>
-    );
+  const [category, setCategory] = useState("all");
+  const reduced = useReducedMotion();
+  const visible = category === "all" ? products : products.filter(product => product.categorySlug === category);
+  return <section id="products" className="collection-section" aria-labelledby="collection-title">
+    <div className="collection-heading"><div><span className="eyebrow-light"><span className="signal-dot" /> THE COLLECTION / {products.length} SERIES</span><motion.h2 id="collection-title" initial={reduced ? false : { y: 45, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} transition={{ duration: .8 }}>Find your<br /><em>next canvas.</em></motion.h2></div><div className="collection-heading-note"><span className="collection-asterisk" aria-hidden="true">✳</span><p>Different spaces.<br />Different ambitions.<br />One extraordinary range.</p><Link href="/products" className="inline-arrow-link">The full catalogue <ArrowUpRight size={18} /></Link></div></div>
+    <div className="collection-toolbar"><div className="collection-filters" role="group" aria-label="Filter display families"><button type="button" className={category === "all" ? "active" : ""} aria-pressed={category === "all"} onClick={() => setCategory("all")}>All <span>12</span></button>{categories.map(item => <button type="button" key={item.id} onClick={() => setCategory(item.slug)} aria-pressed={category === item.slug} className={category === item.slug ? "active" : ""}>{item.name.replace(" LED Displays", "").replace(" Displays", "").replace(" Kiosks", "")}<span>{products.filter(product => product.categorySlug === item.slug).length}</span></button>)}</div><span className="collection-result" aria-live="polite">{String(visible.length).padStart(2, "0")} / SYSTEMS</span></div>
+    <motion.div layout={!reduced} className="product-tile-grid"><AnimatePresence mode="popLayout">{visible.map((product, index) => <ProductTile key={product.id} product={product} index={index} all={category === "all"} />)}</AnimatePresence></motion.div>
+    <div className="collection-custom"><span className="custom-cross" aria-hidden="true">+</span><div><span className="eyebrow-light">A VISION ALL YOUR OWN</span><h3>Let&apos;s shape the unexpected.</h3><p>Custom forms, taxi-top LED and variable message signs. Let&apos;s start with your idea.</p></div><MagneticLink href="/quote" className="round-explore round-explore-small" aria-label="Discuss a custom display"><ArrowUpRight size={27} /><span>Let&apos;s<br />talk</span></MagneticLink></div>
+  </section>;
 }
