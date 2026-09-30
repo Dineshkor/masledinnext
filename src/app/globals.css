@@ -173,3 +173,173 @@ body {
     scroll-behavior: auto;
   }
 }
+
+/* Homepage: light as a material, with a working LED wall. */
+.light-hero {
+  position: relative;
+  overflow: hidden;
+  padding: 168px 0 0;
+  background: #020617;
+  isolation: isolate;
+}
+
+.light-hero-ambient {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 88% 40%, #0e749022 0%, transparent 50%),
+    radial-gradient(ellipse at 65% 65%, #f871710a 0%, transparent 40%);
+}
+
+.light-hero-inner { max-width: 1360px; margin: 0 auto; padding: 0 48px; }
+.light-hero-grid { display: grid; grid-template-columns: 0.86fr 1.14fr; gap: 64px; align-items: center; }
+.light-hero-copy { padding-bottom: 28px; }
+.light-hero-eyebrow {
+  display: flex; align-items: center; gap: 11px;
+  margin-bottom: 30px; font-size: 10px; font-weight: 600;
+  letter-spacing: 0.18em; color: #a5d8e5;
+}
+.light-hero-eyebrow > span { width: 22px; height: 1px; background: #22d3ee; }
+.light-hero h1 {
+  font-size: clamp(48px, 5.3vw, 76px); font-weight: 650;
+  line-height: 1.08; letter-spacing: -0.065em; color: #f8fafc;
+  margin: 0 0 26px;
+}
+.light-hero h1 > span { color: #67e8f9; }
+.light-hero-description { max-width: 350px; color: #94a3b8; font-size: 15px; line-height: 1.85; }
+.light-hero-actions { display: flex; align-items: center; gap: 26px; margin-top: 30px; }
+.light-hero-primary, .light-hero-secondary {
+  display: inline-flex; align-items: center; gap: 19px; font-size: 13px; font-weight: 600;
+  transition: background 180ms, color 180ms, transform 180ms;
+}
+.light-hero-primary { border-radius: 5px; background: #67e8f9; color: #04212c; padding: 16px 20px; }
+.light-hero-primary:hover { background: #a5f3fc; transform: translateY(-2px); }
+.light-hero-secondary { color: #cbd5e1; padding: 16px 0; }
+.light-hero-secondary:hover { color: #67e8f9; }
+.light-hero-note { display: flex; gap: 12px; align-items: center; margin-top: 40px; }
+.light-hero-note-line { width: 2px; height: 30px; background: linear-gradient(#22d3ee, #22d3ee11); }
+.light-hero-note p { font-size: 11px; line-height: 1.8; color: #9aaac0; }
+.light-hero-note p span { color: #788ba5; }
+
+.led-preview { position: relative; min-width: 0; }
+.led-preview::before {
+  content: ""; position: absolute; left: -10%; right: -10%; top: 7%; bottom: 12%;
+  z-index: -1; background: radial-gradient(ellipse, #22d3ee0d, transparent 65%);
+  filter: blur(22px); pointer-events: none;
+}
+.led-preview-heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; gap: 15px; }
+.led-preview-heading > span { display: inline-flex; align-items: center; gap: 8px; font-size: 9px; color: #a8bacb; letter-spacing: 0.14em; }
+.led-preview-heading > .led-preview-label { color: #788ba5; letter-spacing: 0; font-size: 10px; }
+.led-status-dot, .led-bezel-light { width: 5px; height: 5px; border-radius: 50%; background: #67e8f9; box-shadow: 0 0 9px #22d3ee80; }
+.led-wall {
+  position: relative; padding: 8px 8px 0; border-radius: 10px;
+  border: 1px solid #344455;
+  background: linear-gradient(140deg, #263340, #0b1220 36%, #182232);
+  box-shadow: 0 28px 65px #0007, 0 0 45px #22d3ee06, inset 0 1px 0 #ffffff0d;
+}
+.led-wall-screen { position: relative; aspect-ratio: 1.45; overflow: hidden; border-radius: 3px; background: #050a15; }
+.led-canvas { display: block; width: 100%; height: 100%; position: absolute; inset: 0; opacity: 0; cursor: crosshair; transition: opacity 400ms; }
+.led-canvas[data-ready="true"] { opacity: 1; }
+.led-static-art {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse at 25% 35%, #22d3ee70, transparent 45%),
+    radial-gradient(ellipse at 75% 65%, #fb718580, transparent 45%), #050a15;
+}
+.led-static-art::after {
+  content: ""; position: absolute; inset: 0;
+  background: radial-gradient(circle, transparent 2px, #050a15 2.5px) 0 0 / 7px 7px;
+}
+.led-screen-caption {
+  position: absolute; bottom: 29px; left: 26px;
+  display: flex; flex-direction: column; gap: 5px; pointer-events: none;
+  color: #f8fafc; text-shadow: 0 2px 15px #020617;
+}
+.led-screen-caption > span:first-child { font-size: 8px; letter-spacing: 0.24em; font-weight: 600; color: #d3e5ec; }
+.led-screen-caption > span:last-child { font-size: clamp(25px, 2.7vw, 38px); letter-spacing: -0.045em; font-weight: 600; }
+.led-screen-corner { position: absolute; top: 18px; right: 19px; font-size: 8px; font-weight: 600; letter-spacing: 0.16em; color: #cbd5e170; pointer-events: none; }
+.led-wall-bezel { height: 25px; display: flex; justify-content: center; align-items: center; position: relative; }
+.led-wall-bezel > span:first-child { color: #718298; letter-spacing: 0.25em; font-size: 7px; font-weight: 700; }
+.led-wall-bezel > .led-bezel-light { position: absolute; right: 11px; width: 3px; height: 3px; }
+.led-console { display: flex; justify-content: space-between; gap: 12px; align-items: center; margin-top: 18px; }
+.led-pattern-buttons { display: flex; align-items: center; gap: 5px; }
+.led-pattern-button, .led-playback-button {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 40px; border: 1px solid transparent; border-radius: 5px; padding: 0 13px;
+  color: #9aaac0; font-size: 11px; cursor: pointer; transition: color 180ms, background 180ms, border-color 180ms;
+}
+.led-pattern-button:hover, .led-playback-button:hover { color: #f8fafc; background: #ffffff06; }
+.led-pattern-button[aria-pressed="true"] { color: #a5f3fc; background: #22d3ee0c; border-color: #22d3ee30; }
+.led-playback-button { border-color: #ffffff14; width: 40px; padding: 0; flex-shrink: 0; }
+.led-interaction-hint { display: flex; align-items: center; justify-content: center; gap: 7px; font-size: 10px; color: #77889f; margin-top: 14px; }
+.led-hint-touch { display: none; }
+.light-hero-footer {
+  display: flex; justify-content: space-between; align-items: center; gap: 24px;
+  border-top: 1px solid #ffffff0c; padding: 27px 0 29px; margin-top: 52px;
+}
+.light-hero-applications { display: flex; align-items: center; gap: 29px; }
+.light-hero-applications-label { color: #788ba5; font-size: 8px; letter-spacing: 0.16em; }
+.light-hero-applications > div { display: flex; gap: 23px; }
+.light-hero-applications a { display: inline-flex; gap: 5px; align-items: center; font-size: 11px; color: #bdc9d8; padding: 6px 0; }
+.light-hero-applications a:hover { color: #67e8f9; }
+.light-hero-scroll { display: flex; align-items: center; gap: 17px; color: #9aaac0; font-size: 10px; padding: 8px 0; }
+.light-hero-scroll:hover { color: #67e8f9; }
+.light-hero a:focus-visible, .led-preview button:focus-visible { outline: 2px solid #67e8f9; outline-offset: 5px; }
+
+@media (min-width: 1600px) {
+  .light-hero { padding-top: 200px; }
+  .light-hero-footer { margin-top: 80px; }
+}
+@media (max-width: 1100px) {
+  .light-hero-inner { padding: 0 32px; }
+  .light-hero-grid { gap: 36px; grid-template-columns: 0.95fr 1.05fr; }
+  .light-hero h1 { font-size: clamp(46px, 5.5vw, 65px); }
+  .light-hero-applications { gap: 20px; }
+  .light-hero-applications > div { gap: 17px; }
+}
+@media (max-width: 800px) {
+  .light-hero { padding-top: 132px; }
+  .light-hero-inner { padding: 0 28px; }
+  .light-hero-grid { grid-template-columns: 1fr; gap: 40px; }
+  .light-hero-copy { padding: 0; }
+  .light-hero h1 { font-size: clamp(51px, 8.5vw, 72px); }
+  .light-hero-eyebrow { margin-bottom: 24px; }
+  .light-hero-description { max-width: 430px; }
+  .light-hero-note { display: none; }
+  .led-wall-screen { aspect-ratio: 1.55; }
+  .led-screen-caption > span:last-child { font-size: 35px; }
+  .light-hero-footer { margin-top: 35px; }
+  .light-hero-applications { flex-direction: column; align-items: flex-start; gap: 9px; }
+  .light-hero-scroll { max-width: 110px; line-height: 1.7; gap: 12px; }
+}
+@media (max-width: 480px) {
+  .light-hero-inner { padding: 0 22px; }
+  .light-hero h1 { font-size: clamp(44px, 11.8vw, 57px); }
+  .light-hero-description { font-size: 14px; }
+  .light-hero-eyebrow { font-size: 9px; letter-spacing: 0.13em; }
+  .light-hero-actions { gap: 23px; margin-top: 25px; }
+  .light-hero-primary { padding: 14px 16px; gap: 14px; }
+  .led-preview-heading > .led-preview-label { font-size: 9px; }
+  .led-pattern-button { min-height: 44px; gap: 6px; padding: 0 10px; font-size: 10px; }
+  .led-playback-button { width: 44px; height: 44px; }
+  .led-screen-caption { bottom: 19px; left: 18px; }
+  .led-screen-caption > span:last-child { font-size: 28px; }
+  .led-screen-caption > span:first-child { font-size: 7px; }
+  .light-hero-applications > div { gap: 14px; flex-wrap: wrap; }
+  .light-hero-applications a { font-size: 10px; }
+  .light-hero-scroll { display: none; }
+}
+@media (hover: none) {
+  .led-hint-desktop { display: none; }
+  .led-hint-touch { display: inline; }
+}
+@media (max-width: 380px) {
+  .led-pattern-button { padding: 0 11px; }
+  .led-pattern-button > svg { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .light-hero *, .led-preview * { transition: none; }
+  .light-hero-primary:hover { transform: none; }
+}
